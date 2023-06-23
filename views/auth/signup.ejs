@@ -1,0 +1,85 @@
+<%- include('./partials/header.ejs') %>
+
+    <section class="gradient-custom container vh-100">
+        <div class="container py-5 h-100 row justify-content-center align-items-center">
+                <div class="col-12 col-lg-9 col-xl-8">
+                    <div class="card shadow-2-strong card-registration">
+                        <div class="card-body shadow" style="background-color: #EBEBEB;border-radius: 5px;">
+                            
+                            <form action="/signup" method="post" class="d-flex flex-column align-items-center mt-3" id="form">
+                                
+                                <div class="mb-4">
+                                    <div class="fw-bold text-center fs-5 text-uppercase mb-1">sign up</div>
+                                    <div class="text-center" style="font-size: 16px;">Create your account</div>
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="form-outline mb-3">
+                                        <label class="form-label" for="username">Username</label>
+                                        <input type="text" id="username" name="username" style="box-shadow: none;" class="form-control" required/>
+                                    </div>
+                                    
+                                    <div class="form-outline mb-3">
+                                        <label class="form-label" for="email">Email Address</label>
+                                      <input type="text" id="email" name="email" style="box-shadow: none;" class="form-control" required/>
+                                    </div>
+                                    
+                                    <div class="form-outline mb-3">
+                                        <label class="form-label" for="passowrd">Password</label>
+                                      <input type="password" id="password" name="password" style="box-shadow: none;" class="form-control passowrd" required/>
+                                    </div>
+                                    
+                                    <div class="form-outline mb-3">
+                                        <label class="form-label" for="confirm-password">Confirm Password</label>
+                                      <input type="password" id="confirm-password" name="confirmPassword" style="box-shadow: none;" class="form-control passowrd" required/>
+                                    </div>
+                  
+                                  </div>
+
+                                  <div id="error-field" class="text-danger"></div>
+                                  <div class="text-center text-danger"><%= message %></div>
+
+                                <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Sign up</button>
+
+                                <div class="text-center mb-3" style="font-size: 16px;">Already have an account? <a style="color: #7FAD39;" href="/signup">Login</a> here</div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <script>
+      const form = document.getElementById('form');
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirm-password');
+      
+      const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+
+        if(!emailRegex.test(email.value)){
+          document.getElementById('error-field').innerHTML = "Please enter valid email";
+          document.getElementById('error-field').style.display = "block";
+        }
+        else if(password.value !== confirmPassword.value){
+          document.getElementById('error-field').innerHTML = "Password does not match";
+          document.getElementById('error-field').style.display = "block";
+        }
+        else{  
+          document.getElementById('error-field').innerHTML = "";
+          document.getElementById('error-field').style.display = "none";
+          form.submit();
+        }
+
+      })
+
+
+    </script>
+
+
+<%- include('./partials/footer.ejs') %>

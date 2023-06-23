@@ -1,0 +1,125 @@
+<%- include('./partials/header.ejs') %>
+
+    <div class="container-fluid d-flex gap-4" style="background-color: #EDF1F5;">
+        <div class="row shadow-lg">
+            <div class="d-flex flex-column justify-content-between col-auto bg-light min-vh-100 col-12">
+                <div class="mt-4">
+
+                    <ul class="nav nav-pills flex-column mt-2 mt-sm-0" id="menu">
+                        <li class="nav-item my-sm-1 my-2">
+                            <a href="#" class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                                <i class="fa fa-gauge d-sm-none d-inline"></i>
+                                <span class="ms-2 d-none d-sm-inline">Dashboard</span>
+                            </a>
+                        </li>
+
+                        <hr class="text-dark d-none d-sm-block my-3" />
+
+                        <li class="nav-item my-sm-1 my-2">
+                            <a href="#categorymenu" data-bs-toggle="collapse"
+                                class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                                <i class="fa fa-table d-sm-none d-inline"></i>
+                                <span class="ms-2 d-none d-sm-inline text-decoration-none">Category</span>
+                            </a>
+
+                            <ul class="nav collapse ms-1 flex-column " id="categorymenu" data-bs-parent="#menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/category" aria-current="page">Categories</a>
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/category/add" aria-current="page">Add Category</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <hr class="text-dark d-none d-sm-block my-3" />
+
+                        <li class="nav-item my-sm-1 my-2">
+                            <a href="#sidemenu" data-bs-toggle="collapse"
+                                class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                                <i class="fa fa-shop d-sm-none d-inline"></i>
+                                <span class="ms-2 d-none d-sm-inline">Products</span>
+                            </a>
+
+                            <ul class="nav collapse ms-1 flex-column " id="sidemenu" data-bs-parent="#menu">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="#" aria-current="page">Add Products</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <hr class="text-dark d-none d-sm-block my-3" />
+
+                        <li class="nav-item my-sm-1 my-2">
+                            <a href="#" class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                                <i class="fa fa-truck-fast d-sm-none d-inline"></i>
+                                <span class="ms-2 d-none d-sm-inline">Orders</span>
+                            </a>
+                        </li>
+
+                        <hr class="text-dark d-none d-sm-block my-3" />
+
+                        <li class="nav-item my-sm-1 my-2">
+                            <a href="#" class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                                <i class="fa fa-users  d-sm-none d-inline"></i>
+                                <span class="ms-2 d-none d-sm-inline">customers</span>
+                            </a>
+                        </li>
+
+                        <hr class="text-dark d-none d-sm-block my-3" />
+
+                    </ul>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        
+
+            
+        <section class="gradient-custom container vh-100">
+            <div class="container py-5 h-100 row justify-content-center align-items-center">
+                    <div class="col-12 col-lg-9 col-xl-8">
+                        <div class="card shadow-2-strong card-registration">
+                            <div class="card-body shadow" style="background-color: #EBEBEB;border-radius: 5px;">
+                                
+                                <form action="<%= action %>"  method="post" id="form" class="d-flex flex-column align-items-center mt-3">
+                                    
+                                    <div class="mb-5">
+                                        <% if( action == "/admin/category/add") {%>
+                                            <div class="fw-bold text-center fs-5 text-uppercase mb-1">Enter your Category</div>
+                                        <% } else { %>
+                                            <div class="fw-bold text-center fs-5 text-uppercase mb-1">Update your Category</div>
+                                        <% } %>
+                                    </div>
+    
+                                    <div class="col-md-6">
+    
+                                        <div class="form-outline mb-4">
+                                            <label class="form-label" for="categoryName">Category Name</label>
+                                          <input type="text" id="categoryName" name="categoryName" style="box-shadow: none;" class="form-control" required/>
+                                        </div>
+    
+                                    </div>
+    
+                                    <div class="text-center text-danger"><%= message %></div>
+    
+                                    <% if( action == "/admin/category/add") {%>
+                                    <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Add</button>
+                                    <% } else { %>
+                                        <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Edit</button>
+                                    <% } %>  
+    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+            
+
+       
+    </div>
+
+    <%- include('./partials/footer.ejs') %>
