@@ -84,14 +84,10 @@
                         <div class="card shadow-2-strong card-registration">
                             <div class="card-body shadow" style="background-color: #EBEBEB;border-radius: 5px;">
                                 
-                                <form action="<%= action %>"  method="post" id="form" class="d-flex flex-column align-items-center mt-3">
+                                <form action="admin/category/add"  method="post" id="form" class="d-flex flex-column align-items-center mt-3">
                                     
                                     <div class="mb-5">
-                                        <% if( action == "/admin/category/add") {%>
-                                            <div class="fw-bold text-center fs-5 text-uppercase mb-1">Enter your Category</div>
-                                        <% } else { %>
-                                            <div class="fw-bold text-center fs-5 text-uppercase mb-1">Update your Category</div>
-                                        <% } %>
+                                        <div class="fw-bold text-center fs-5 text-uppercase mb-1">Enter your Category</div>
                                     </div>
     
                                     <div class="col-md-6">
@@ -105,11 +101,7 @@
     
                                     <div class="text-center text-danger"><%= message %></div>
     
-                                    <% if( action == "/admin/category/add") {%>
-                                    <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Add</button>
-                                    <% } else { %>
-                                        <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Edit</button>
-                                    <% } %>  
+                                    <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Add</button> 
     
                                 </form>
                             </div>

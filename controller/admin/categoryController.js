@@ -16,7 +16,7 @@ const loadCategory = async (req, res)=>{
 }
 
 const loadAddCategory = (req, res)=>{
-    res.render('admin/addCategory',{message: null, action: "/admin/category/add"});
+    res.render('admin/addCategory',{message: null});
 }
 
 const addCategory = async (req, res)=>{
@@ -26,7 +26,7 @@ const addCategory = async (req, res)=>{
         const catergoryData = await categoryModel.findOne({categoryName: {$regex: new RegExp(`^${categoryName}$`,"i")}})
 
         if(catergoryData){
-            res.render('admin/addCategory',{message: "This category already exists", action: "/admin/category/add"});
+            res.render('admin/addCategory',{message: "This category already exists"});
         }else{
             const newCategory = categoryModel({
                 categoryName: categoryName,
@@ -47,9 +47,9 @@ const loadEditCategory = async (req, res)=>{
 
         const id = req.query.id;
 
-        const categoryData = await categoryModel.find({_id: id});
+        const categoryData = await categoryModel.findOne({_id: id});
 
-        res.render('admin/addCategory',{message: null, categoryName: categoryData, action: "/admin/category/edit"});
+        res.render('admin/editCategory',{message: null, category: categoryData});
         
     } catch (err) {
         console.log(err);
@@ -59,24 +59,21 @@ const loadEditCategory = async (req, res)=>{
 const editCategory = async (req, res)=>{
     try {
 
+        const id = req.query.id;
+        const categoryName = req.body.categoryName;
 
+        console.log(id);
+        console.log(categoryName);
+
+        await categoryModel.findByIdAndUpdate(id, {categoryName: categoryName});
+        res.redirect('/admin/category');
         
     } catch (err) {
         console.log(err)
     }
 }
 
-const deleteCategory = async (req, res)=>{
-    try {
-        const id = req.query.id;
 
-        await categoryModel.deleteOne({_id: id});
-        res.redirect('/admin/category');
-        
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 
 
@@ -85,5 +82,5 @@ module.exports = {
     loadAddCategory,
     addCategory,
     loadEditCategory,
-    deleteCategory,
+    editCategory,
 }

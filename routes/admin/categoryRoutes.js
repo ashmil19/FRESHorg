@@ -8,8 +8,8 @@ router.get('/add',categoryController.loadAddCategory);
 router.post('/add',categoryController.addCategory);
 
 router.get('/edit',categoryController.loadEditCategory);
+router.post('/edit',categoryController.editCategory);
 
-router.get('/delete',categoryController.deleteCategory);
 
 
 module.exports = router;
