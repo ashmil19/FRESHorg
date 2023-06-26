@@ -78,32 +78,41 @@
 
         
 
-        <div class="table-scrollable">
-            <table class="table table-light table-striped table-responsive" >
-                <thead>
+      
 
-                    <tr>
-                        <th>sl.no</th>
-                        <th>Category Name</th>
-                        <th>Edit</th>
-                    </tr>
-                    
-                </thead>
 
-                <tbody>
+        <section class="gradient-custom container vh-100">
+            <div class="container py-5 h-100 row justify-content-center align-items-center">
+                <div class="col-6">
+                    <div class="card shadow-2-strong card-registration">
+                        <div class="card-body shadow" style="background-color: #EBEBEB;border-radius: 5px;">
 
-                    <% categories.forEach((category,i)=>{ %>
-                        <tr>
-                            <td><%= i+1 %></td>
-                            <td><%= category.categoryName %></td>
-                            <td><a href="/admin/category/edit?id=<%= category._id %>">  <button type="button" class="btn btn-success">Edit</button></a></td>
-                        </tr>
-                        <% }) %>
-                        
-                        
-                </tbody>
-            </table>
-          </div>
+                            <form action="" method="post" id="form"
+                                class="d-flex flex-column align-items-center mt-3">
+
+                                <div class="d-flex align-items-center gap-3 mb-3">
+
+                                    <label class="fw-bold fs-5">Access: </label>
+                                    <select name="access" class="form-select" style="box-shadow: none;">
+                                        <option value="true" <% if(user.isAccess){ %> selected <% } %> >Active</option>
+                                        <option value="false" <% if(!user.isAccess){ %> selected <% } %> >Block</option>
+                                    </select>
+
+                                </div>
+
+
+                                <div>
+                                    <button type="submit" style="background-color: #7FAD39;color: #fff;width: 100px;"
+                                    class="btn btn-sm fw-normal p-10 mb-3 mt-3">Edit</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
           
 

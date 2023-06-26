@@ -24,7 +24,8 @@
 
                             <ul class="nav collapse ms-1 flex-column " id="categorymenu" data-bs-parent="#menu">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#" aria-current="page">Add Category</a>
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/category" aria-current="page">Categories</a>
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/category/add" aria-current="page">Add Category</a>
                                 </li>
                             </ul>
                         </li>
@@ -35,12 +36,13 @@
                             <a href="#sidemenu" data-bs-toggle="collapse"
                                 class="nav-link text-dark text-center text-sm-start" aria-current="page">
                                 <i class="fa fa-shop d-sm-none d-inline"></i>
-                                <span class="ms-2 d-none d-sm-inline">Products</span>
+                                <span class="ms-2 d-none d-sm-inline">Product</span>
                             </a>
 
                             <ul class="nav collapse ms-1 flex-column " id="sidemenu" data-bs-parent="#menu">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="#" aria-current="page">Add Products</a>
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/product" aria-current="page">Products</a>
+                                    <a class="nav-link text-dark" style="font-size: .75rem;" href="/admin/product/add" aria-current="page">Add Product</a>
                                 </li>
                             </ul>
                         </li>
@@ -57,9 +59,9 @@
                         <hr class="text-dark d-none d-sm-block my-3" />
 
                         <li class="nav-item my-sm-1 my-2">
-                            <a href="#" class="nav-link text-dark text-center text-sm-start" aria-current="page">
+                            <a href="/admin/user" class="nav-link text-dark text-center text-sm-start" aria-current="page">
                                 <i class="fa fa-users  d-sm-none d-inline"></i>
-                                <span class="ms-2 d-none d-sm-inline">customers</span>
+                                <span class="ms-2 d-none d-sm-inline">Users</span>
                             </a>
                         </li>
 
@@ -88,9 +90,9 @@
                         <div class="card-body d-flex flex-column align-items-center">
                             <h5 class="card-title fs-6 text-center">Card title</h5>
                             <h5 class="card-title fs-6">price</h5>
-                            <div class="d-flex justify-content-between">
-                                <a href="#" style="font-size: .55rem;" class="btn btn-outline-success">edit</a>
-                                <a href="#" style="font-size: .55rem;" class="btn btn-outline-success">edit</a>
+                            <div class="d-flex gap-1">
+                                <a href="#" style="font-size: .55rem;" class="btn btn-outline-success">Edit</a>
+                                <a href="#" style="font-size: .55rem;" class="btn btn-outline-danger">Delete</a>
                             </div>
 
                         </div>

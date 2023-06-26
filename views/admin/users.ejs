@@ -84,7 +84,9 @@
 
                     <tr>
                         <th>sl.no</th>
-                        <th>Category Name</th>
+                        <th>User Name</th>
+                        <th>Contact</th>
+                        <th>Status</th>
                         <th>Edit</th>
                     </tr>
                     
@@ -92,13 +94,21 @@
 
                 <tbody>
 
-                    <% categories.forEach((category,i)=>{ %>
+                    <% users.forEach((user,i)=>{ %>
                         <tr>
                             <td><%= i+1 %></td>
-                            <td><%= category.categoryName %></td>
-                            <td><a href="/admin/category/edit?id=<%= category._id %>">  <button type="button" class="btn btn-success">Edit</button></a></td>
+                            <td><%= user.username %></td>
+                            <td><%= user.email%></td>
+
+                            <% if(user.isAccess){ %>
+                                <th><span class="text-success">Active</span></th>
+                            <% }else{ %>
+                                <th><span class="text-danger">Blocked</span></th>
+                            <% } %>
+
+                            <td><a href="/admin/user/edit?id=<%= user._id %>">  <button type="button" class="btn btn-success">Edit</button></a></td>
                         </tr>
-                        <% }) %>
+                    <% }) %>
                         
                         
                 </tbody>
