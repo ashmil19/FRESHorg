@@ -166,21 +166,28 @@ const verifyLogin = async (req, res)=>{
 
             if(passMatch){
 
-                if(userData.isVerified && userData.isAccess){
-                    
-                    const secret = await sendOtp(userData);
-
-                    const options = {
-                        maxAge: 1000 * 60 * 2,
-                        httpOnly: true,
-                    }
-
-                    res.cookie('otpHash', secret.base32, options);
-                    res.render('auth/otp');
-
+                if(userData.isAdmin){
+                    req.session.admin_id = userData._id;
+                    res.redirect('/admin/dashboard');
                 }else{
-                    // you dont have the access
-                    res.render('auth/login',{message: "You don't have the access"});
+
+                    
+                    if(userData.isVerified && userData.isAccess){
+                        
+                        const secret = await sendOtp(userData);
+                        
+                        const options = {
+                            maxAge: 1000 * 60 * 2,
+                            httpOnly: true,
+                        }
+                        
+                        res.cookie('otpHash', secret.base32, options);
+                        res.render('auth/otp');
+                        
+                    }else{
+                        // you dont have the access
+                        res.render('auth/login',{message: "You don't have the access"});
+                    }
                 }
             }else{
                 // password is incorrect

@@ -1,17 +1,15 @@
-const fileUpload = require('express-fileupload');
-
 const categoryModel = require('../../models/categoryModel');
 const productModel = require('../../models/productModel');
 const multipleImage = require('../../utils/uploadImage');
 
 
-const loadProducts = (req, res)=>{
-    res.render('admin/product');
+const loadProducts = async (req, res)=>{
+    const products = await productModel.find();
+    res.render('admin/product',{products});
 }
 
 const loadAddProducts = async (req, res)=>{
     const category = await categoryModel.find();
-    const prodcut = await productModel.find();
     res.render('admin/addProduct',{category});
 }
 
@@ -31,8 +29,6 @@ const addProducts = async (req, res)=>{
         quantity = parseInt(quantity);
         
         const urlList = await multipleImage(images);
-
-        console.log(typeof urlList[0]);
 
         const newProduct =  productModel({
             productName: productName,
@@ -54,9 +50,71 @@ const addProducts = async (req, res)=>{
 
 }
 
+
+const loadEditProduct = async (req, res)=>{
+    const id = req.query.id;
+
+    const categories = await categoryModel.find();
+    const product = await productModel.findOne({_id: id});
+    res.render('admin/editProduct',{categories,product});
+}
+
+const editProduct = async (req, res)=>{
+
+    try {
+
+        const id = req.query.id;
+
+        const productName = req.body.productName;
+        const category = req.body.category;
+        let price = req.body.price;
+        let quantity = req.body.quantity;
+        const blurb = req.body.blurb;
+        const description = req.body.description;
+        
+
+        price = parseFloat(price);
+        quantity = parseInt(quantity);
+
+
+        await productModel.findByIdAndUpdate(id, {
+            productName: productName,
+            category: category,
+            price: price,
+            quantity: quantity,
+            blurb: blurb,
+            description: description,
+        })
+
+        res.redirect('/admin/product');
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
+
+const deleteProduct = async (req, res)=>{
+    try {
+        const id = req.query.id;
+
+        console.log(id);
+        
+        await productModel.deleteOne({_id: id});
+        res.redirect('/admin/product');
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     loadProducts,
     loadAddProducts,
     addProducts,
+    loadEditProduct,
+    editProduct,
+    deleteProduct,
 }
 

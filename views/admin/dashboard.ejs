@@ -78,6 +78,7 @@
 
 
                         <a href="/admin/dashboard/adminLogout" style="background-color: #7FAD39;color: #fff;width: 150px;" class="btn btn-sm fw-normal p-10 mb-3 mt-3">Logout</a> 
+
                     </ul>
                 </div>
 
@@ -89,30 +90,11 @@
 
         
 
+        
+
+          
+
             
-
-            <div class="row row-cols-1 row-cols-md-3 g-4 mt-3 mb-5 w-100 px-5">
-
-                <% products.forEach((product)=>{ %>
-
-                <div class="col col-md-4 col-sm-6">
-                    <div class="card">
-                        <img src="<%= product.image[0] %>" class="card-img-top" alt="...">
-                        <div class="card-body d-flex flex-column align-items-center">
-                            <h5 class="card-title fs-6 text-center"><%= product.productName %></h5>
-                            <h5 class="card-title fs-6"><%= product.price %></h5>
-                            <div class="d-flex gap-1">
-                                <a href="/admin/product/edit?id=<%= product._id %>" style="font-size: .55rem;" class="btn btn-outline-success">Edit</a>
-                                <a href="/admin/product/delete?id=<%= product._id %>" style="font-size: .55rem;" class="btn btn-outline-danger">Delete</a>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                
-                <% }) %>
-                
-            </div>
 
        
     </div>
