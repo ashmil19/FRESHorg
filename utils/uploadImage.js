@@ -4,10 +4,10 @@ const cloudinary = require('cloudinary').v2;
 const imageUpload = async (file)=>{
     try{
 
-        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+        const result = await cloudinary.uploader.upload(file.tempFilePath,{
             public_id: `${Date.now()}`,
             resource_type: "auto",
-            folder: "imagesfortesh",
+            folder: "Freshorg",
         })
         
         return result.url;
@@ -27,6 +27,7 @@ const multipleImage = async (files)=>{
         
         for(let i=0;i<files.length;i++){
             const file = files[i];
+
             const result = await imageUpload(file);
             imageUrlList.push(result);
         }

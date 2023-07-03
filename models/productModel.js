@@ -31,6 +31,11 @@ const productSchema = schema({
         type: String,
         required: true,
     }],
+    isActive: {
+        type: Boolean,
+        required: true,
+        default: true,
+    }
 })
 
 

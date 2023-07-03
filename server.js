@@ -6,11 +6,8 @@ const cloudinary = require('cloudinary').v2;
 const session = require('express-session');
 const nocache = require('nocache');
 
-const userRoutes = require('./routes/user/userRoute');
-const adminProductRoutes = require('./routes/admin/productRoutes');
-const admincategoryRoutes = require('./routes/admin/categoryRoutes');
-const adminUserRoutes = require('./routes/admin/userRoutes');
-const adminDashboardRoutes = require('./routes/admin/dashboardRoutes');
+const userRoutes = require('./routes/userRoute');
+const adminRoutes = require('./routes/adminRoutes');
 
 const fileUpload = require('express-fileupload');
 
@@ -40,6 +37,7 @@ cloudinary.config({
 })
 
 // middlewares
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
@@ -57,11 +55,8 @@ app.use(nocache());
 
 
 // routes
+app.use('/admin',adminRoutes);
 app.use('/',userRoutes);
-app.use('/admin/product',adminProductRoutes);
-app.use('/admin/category',admincategoryRoutes);
-app.use('/admin/user',adminUserRoutes);
-app.use('/admin/dashboard',adminDashboardRoutes);
 
 // start the app
 app.listen(process.env.PORT,()=>{

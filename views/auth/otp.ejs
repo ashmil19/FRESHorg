@@ -6,7 +6,7 @@
                     <div class="card shadow-2-strong card-registration">
                         <div class="card-body shadow" style="background-color: #EBEBEB;border-radius: 5px;">
                             
-                            <form action="/login/otp"  method="post" id="form" class="d-flex flex-column align-items-center mt-3">
+                            <form action="<%= localAction %>"  method="post" id="form" class="d-flex flex-column align-items-center mt-3">
                                 
                                 <div class="mb-5">
                                     <div class="fw-bold text-center fs-5 text-uppercase mb-1">OTP</div>
@@ -25,6 +25,7 @@
                                 </div>
 
                                 <div id="error-field" class="text-danger"></div>
+                                <div class="text-center text-danger"><%= message %></div>
 
 
                                 <button type="submit" style="background-color: #7FAD39;color: #fff;width: 200px;" class="btn fw-normal p-10 mb-3 mt-3">Submit</button>

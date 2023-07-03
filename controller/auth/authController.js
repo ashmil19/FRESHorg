@@ -1,57 +1,9 @@
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
-const speakeasy = require('speakeasy');
 
 const userModel = require('../../models/userModel');
+const hash = require('../../utils/toHash')
+const otp = require('../../utils/sendOtp');
 
-
-const hashPassword = async (password)=>{
-    try{
-        const passwordHash = await bcrypt.hash(password, 10);
-        return passwordHash;
-    }
-    catch(err){
-        console.log(err.message);
-    }
-}
-
-const sendEmail = async (savedUser)=>{
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-        tls: {
-            rejectUnauthorized: false,
-        },
-    })
-
-    const info = await transporter.sendMail({
-        from: process.env.EMAIL_USER, // sender address
-        to: savedUser.email, // list of receivers
-        subject: "Verify Your Email", // Subject line
-        text: "please click", // plain text body
-        html: `<p>To verify your <b>Freshorg</b> account <a href="http://localhost:${process.env.PORT}/signup/success/?id=${savedUser._id}">click here<a></p>`, // html body
-    });
-
-    console.log("message sent: ",info.messageId);
-}
-
-const emailVerifySuccess = async (req, res) =>{
-
-    try{
-        userId = req.query.id;
-        await userModel.findByIdAndUpdate(req.query.id, {$set: {isVerified: true}});
-        res.redirect('/login')
-
-    }catch(err){
-        console.log(err);
-    }
-    
-}
 
 const loadSignUp = (req, res)=>{
     res.render('auth/signup',{message: null});
@@ -60,16 +12,14 @@ const loadSignUp = (req, res)=>{
 const createUser = async (req, res)=>{
     try{
 
-        const username = req.body.username;
-        const email = req.body.email;
-        const password = req.body.password;
+        const { username, email, password} = req.body;
         
         const userData = await userModel.findOne({email: email});
 
         if(userData){
             res.render('auth/signup',{message: "This email has another account"})
         }else{
-            const passwordHash = await hashPassword(password);
+            const passwordHash = await hash(password);
             const newUser = userModel({
                 username: username,
                 email: email,
@@ -77,8 +27,16 @@ const createUser = async (req, res)=>{
             })
 
             const savedUser = await newUser.save();
-            await sendEmail(savedUser);
-            res.render('auth/verifyEmail');
+
+            const options = {
+                maxAge: 1000 * 60 * 2,
+                httpOnly: true,
+            }
+
+            const result = await otp.sendOtp(savedUser);
+            res.cookie('hashOtp', result, {httpOnly: true});
+
+            res.render('auth/otp',{id: savedUser._id, message: null, localAction: `/signup/otp?id=${savedUser._id}`});
         }
 
     }catch(err){
@@ -86,67 +44,36 @@ const createUser = async (req, res)=>{
     }
 }
 
-const otpGenerate = ()=>{
-    const secret = speakeasy.generateSecret({ length: 20 });
 
-    const code = speakeasy.totp({
-        secret: secret.base32,
-        encoding: 'base32',
-        digits: 4,
-    })
-
-    return {code ,secret};
-}
-
-const sendOtp = async (user)=>{
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-        tls: {
-            rejectUnauthorized: false,
-        },
-    })
-
-    const otp = otpGenerate();
-
-    const info = await transporter.sendMail({
-        from: process.env.EMAIL_USER, // sender address
-        to: user.email, // list of receivers
-        subject: "OTP verification", // Subject line
-        text: "Don't share the code", // plain text body
-        html: `<p>Your OTP is <b>${otp.code}</b></p>`, // html body
-    });
-
+const verifyOtp = async (req, res)=>{
     
-    return otp.secret;
-}
+    try {
+        const userId = req.query.id;
 
-const otpVerify = (req, res)=>{
-    const token = req.body.otp;
-    const secret = req.cookies['otpHash']
-    
-    const verified = speakeasy.totp.verify({
-        secret,
-        encoding: 'base32',
-        token,
-        digits: 4,
-    })
-    
-    console.log(verified);
+        const secret = req.cookies['hashOtp'];
+        const OTP = req.body.otp;
+   
 
-    if(verified){
-        res.send("success");
-    }else{
-        res.send('failer');
+        const verified = await bcrypt.compare(OTP, secret) 
+        
+        if(verified){
+            await userModel.findByIdAndUpdate(userId, {$set: {isVerified: true}});
+            console.log("otp verification success");
+            res.redirect('/login');
+        }else{
+            console.log("otp verification failed");
+            res.render('auth/otp',{id: userId, message: "Incorrect OTP", localAction: `/signup/otp?id=${savedUser._id}`});
+
+        }
+        
+    } catch (error) {
+
+        console.log(error)
+        
     }
-
     
 }
+
 
 const loadLogin = (req,res)=>{
     res.render('auth/login',{message: null});
@@ -156,8 +83,7 @@ const verifyLogin = async (req, res)=>{
 
     try{
 
-        const email = req.body.email;
-        const password = req.body.password;
+        const {email , password} = req.body;
         
         const userData = await userModel.findOne({email: email});
 
@@ -170,19 +96,11 @@ const verifyLogin = async (req, res)=>{
                     req.session.admin_id = userData._id;
                     res.redirect('/admin/dashboard');
                 }else{
-
                     
                     if(userData.isVerified && userData.isAccess){
                         
-                        const secret = await sendOtp(userData);
-                        
-                        const options = {
-                            maxAge: 1000 * 60 * 2,
-                            httpOnly: true,
-                        }
-                        
-                        res.cookie('otpHash', secret.base32, options);
-                        res.render('auth/otp');
+                        req.session.user_id = userData._id;
+                        res.redirect('/');
                         
                     }else{
                         // you dont have the access
@@ -201,9 +119,61 @@ const verifyLogin = async (req, res)=>{
     }catch(err){
         console.log(err);
     }
+}
 
+const loadForgotPassword = (req, res)=>{
+    res.render("auth/forgotPassword",{message: null});
+}
 
+const forgotPassword = async (req, res)=>{
+    const email = req.body.email;
 
+    const emailMatch = await userModel.findOne({email: email});
+
+    if(!emailMatch){
+        res.render("auth/forgotPassword",{message: "This email has no account"});
+    }else{
+        const result = await otp.sendOtp(emailMatch);
+        res.cookie('forgotHash', result, {httpOnly: true});
+        res.render('auth/otp',{id: emailMatch._id, message: null, localAction: `/forgotPassword/otp?id=${emailMatch._id}`});
+    }
+
+}
+
+const verifyForgotPasswordOtp = async (req, res)=>{
+    try {
+        const userId = req.query.id;
+
+        const secret = req.cookies['forgotHash'];
+        const OTP = req.body.otp;
+   
+
+        const verified = await bcrypt.compare(OTP, secret) 
+        
+        if(verified){
+            console.log("otp verification success");
+            res.cookie('id', userId, {httpOnly: true});
+            res.render("auth/newPassword");
+        }else{
+            console.log("otp verification failed");
+            res.render('auth/otp',{id: userId, message: "Incorrect OTP", localAction: `/forgotPassword/otp?id=${userId}`});
+
+        }
+        
+    } catch (error) {
+
+        console.log(error)
+        
+    }
+}
+
+const newPassword = async (req, res)=>{
+    const id = req.cookies['id'];
+    
+    const newPassword = req.body.password;
+    const hashNewPassword = await hash(newPassword);
+    await userModel.findByIdAndUpdate(id, {password: hashNewPassword});
+    res.redirect('/login');
 }
 
 
@@ -212,7 +182,10 @@ module.exports = {
     loadSignUp,
     loadLogin,
     createUser,
-    emailVerifySuccess,
     verifyLogin,
-    otpVerify
+    verifyOtp,
+    loadForgotPassword,
+    forgotPassword,
+    verifyForgotPasswordOtp,
+    newPassword,
 }

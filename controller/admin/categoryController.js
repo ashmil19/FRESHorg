@@ -1,13 +1,21 @@
 const categoryModel = require('../../models/categoryModel');
-
+const productModel = require('../../models/productModel');
 
 const loadCategory = async (req, res)=>{
 
     try{
-
+        let productsValue = [];
         const categories = await categoryModel.find();
+
+        // categories.forEach( async (cat)=>{
+        //     productsValue.push(await productModel.findOne({category: cat._id}));
+        // })
+
+        for(let i=0;i<categories.length;i++){
+            productsValue[i] = await productModel.findOne({category: categories[i].categoryName})
+        }
     
-        res.render('admin/category',{categories});
+        res.render('admin/category',{categories, productsValue});
 
     }catch(err){
         console.log(err);

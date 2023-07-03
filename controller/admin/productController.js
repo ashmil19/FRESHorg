@@ -9,8 +9,8 @@ const loadProducts = async (req, res)=>{
 }
 
 const loadAddProducts = async (req, res)=>{
-    const category = await categoryModel.find();
-    res.render('admin/addProduct',{category});
+    const categories = await categoryModel.find();
+    res.render('admin/addProduct',{categories});
 }
 
 const addProducts = async (req, res)=>{
@@ -97,11 +97,14 @@ const editProduct = async (req, res)=>{
 
 const deleteProduct = async (req, res)=>{
     try {
-        const id = req.query.id;
+        const {id, active} = req.query;
 
-        console.log(id);
-        
-        await productModel.deleteOne({_id: id});
+        if(active == "true"){
+            await productModel.findByIdAndUpdate(id, {$set: {isActive: false}});
+        }else if(active == "false"){
+            await productModel.findByIdAndUpdate(id, {$set: {isActive: true}});
+        }
+                
         res.redirect('/admin/product');
         
     } catch (error) {
