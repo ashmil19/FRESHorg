@@ -4,7 +4,7 @@ const isLogin = (req, res, next)=>{
         if(req.session.user_id){
             next();
         }else{
-            res.redirect('/');
+            res.redirect('/login');
         }
 
     } catch (error) {
@@ -16,7 +16,7 @@ const isLogout = (req, res, next)=>{
     try {
 
         if(req.session.user_id){
-            res.redirect('/admin/dashboard');
+            res.redirect('/');
         }else{
             next();
         }

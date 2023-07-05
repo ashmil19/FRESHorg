@@ -60,17 +60,36 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="header__cart">
-                        <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-                        </ul>
-                        <div class="header__top__right__auth">
-                            <a href="/login"><i class="fa fa-user"></i>User</a>
-                        </div>
 
                         <div class="header__top__right__auth">
-                            <a href="/logout" class="btn btn-sm btn-outline-danger">Logout</a>
+
+                            <% if(!id) {%>
+                            
+                            
+
+							<div class="header__top__right__auth">
+                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                            </div>
+
+                            <% } else {%>
+                            
+
+                            <ul>
+                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                            </ul>
+
+                            <div class="header__top__right__auth">
+                                <a href="/profile"><i class="fa fa-user"></i><%= user.username %></a>
+                            </div>
+
+							<div class="header__top__right__auth">
+                                <a href="/logout" style="box-shadow: none;border: none;" class="btn btn-sm btn-outline-danger">Logout</a>
+                            </div>
+                            
+                            <% } %>
                         </div>
+                        
                     </div>
                 </div>
             </div>

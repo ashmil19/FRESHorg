@@ -62,7 +62,7 @@ const verifyOtp = async (req, res)=>{
             res.redirect('/login');
         }else{
             console.log("otp verification failed");
-            res.render('auth/otp',{id: userId, message: "Incorrect OTP", localAction: `/signup/otp?id=${savedUser._id}`});
+            res.render('auth/otp',{id: userId, message: "Incorrect OTP", localAction: `/signup/otp?id=${userId}`});
 
         }
         
@@ -153,7 +153,7 @@ const verifyForgotPasswordOtp = async (req, res)=>{
         if(verified){
             console.log("otp verification success");
             res.cookie('id', userId, {httpOnly: true});
-            res.render("auth/newPassword");
+            res.render("auth/newPassword",{action: "/forgotPassword/newPassword"});
         }else{
             console.log("otp verification failed");
             res.render('auth/otp',{id: userId, message: "Incorrect OTP", localAction: `/forgotPassword/otp?id=${userId}`});

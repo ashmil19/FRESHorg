@@ -1,0 +1,131 @@
+<%- include('./partials/header.ejs') %>
+
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="#"><img src="/img/logo.png" alt=""></a>
+        </div>
+        <div class="humberger__menu__cart">
+            <ul>
+                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+            </ul>
+            <div class="header__top__right__auth">
+                <a class="navbar-brand text-dark fs-4 fw-bold" href="#">FRESH<span class="text-danger">org</span></a>
+            </div>
+            
+        </div>
+        
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+
+    </div>
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+     <header class="header">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a class="navbar-brand text-dark fs-4 fw-bold" href="#">FRESH<span class="text-danger">org</span></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+ 
+                        
+
+                    </div>
+                </div>
+            </div>
+
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <div class="container py-5">
+        <h1>Cart</h1>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <!-- <th>Price</th> -->
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <% cart.items.forEach((item)=>{ %>
+                <tr>
+                  <td>
+                    <div class="product-info d-flex align-items-center">
+                    <% products.forEach((product)=>{ %>
+                      <% if(item.productId == product._id) {%>
+                      <div>
+                        <img style="width: 2rem;height: 2rem;" src="<%= product.image[0]%>"  alt="Product 1" class="product-image">
+                      </div>
+                      <% } %>
+                      
+                      <div class="product-name ms-3"><% if(item.productId == product._id) {%><%= product.productName %><% } %></div>
+                      <% }) %>
+                  </div>
+                </td>
+                  <!-- <td>$10</td> -->
+                  <td>
+                    <input type="number" class="form-control quantityInput" value="<%= item.quantity %>" min="1">
+                  </td>
+                  <td>$<%= item.totalPrice.toFixed(2) %></td>
+                  <td><button class="btn btn-danger removeBtn" type="button">Remove</button></td>
+                </tr>
+              <% }) %>
+
+              
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="text-end fw-bold">Total:</td>
+                <td>$<%= cart.cartPrice.toFixed(2) %></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="text-end">
+          <button class="btn btn-primary">Checkout</button>
+        </div>
+      </div>
+    
+
+    <%- include('./partials/footer.ejs') %>
