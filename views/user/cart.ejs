@@ -73,59 +73,280 @@
     </header>
     <!-- Header Section End -->
 
-    <div class="container py-5">
+    <!-- <div class="container py-5">
         <h1>Cart</h1>
         <div class="table-responsive">
+          
           <table class="table">
-            <thead>
+            <thead class="thead-dark">
               <tr>
-                <th>Product</th>
-                <!-- <th>Price</th> -->
-                <th>Quantity</th>
-                <th>Total</th>
-                <th>Action</th>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
               </tr>
             </thead>
             <tbody>
-
-              <% cart.items.forEach((item)=>{ %>
-                <tr>
-                  <td>
-                    <div class="product-info d-flex align-items-center">
-                    <% products.forEach((product)=>{ %>
-                      <% if(item.productId == product._id) {%>
-                      <div>
-                        <img style="width: 2rem;height: 2rem;" src="<%= product.image[0]%>"  alt="Product 1" class="product-image">
-                      </div>
-                      <% } %>
-                      
-                      <div class="product-name ms-3"><% if(item.productId == product._id) {%><%= product.productName %><% } %></div>
-                      <% }) %>
-                  </div>
-                </td>
-                  <!-- <td>$10</td> -->
-                  <td>
-                    <input type="number" class="form-control quantityInput" value="<%= item.quantity %>" min="1">
-                  </td>
-                  <td>$<%= item.totalPrice.toFixed(2) %></td>
-                  <td><button class="btn btn-danger removeBtn" type="button">Remove</button></td>
-                </tr>
-              <% }) %>
-
-              
-            </tbody>
-            <tfoot>
               <tr>
-                <td colspan="4" class="text-end fw-bold">Total:</td>
-                <td>$<%= cart.cartPrice.toFixed(2) %></td>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
               </tr>
-            </tfoot>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
           </table>
+          
         </div>
-        <div class="text-end">
-          <button class="btn btn-primary">Checkout</button>
+        <div class="container-fluid d-flex justify-content-end mt-3">
+          <div class="d-flex justify-content-between">
+            <kbd class="fw-bold">Total Price</kbd>
+            <div class="ml-5 font-weight-bolder">$54</div>
+          </div>
         </div>
-      </div>
+        <div class="container-fluid d-flex justify-content-end mt-5">
+          <button class="btn btn-success">Checkout</button>
+        </div>
+      </div> -->
+
+      <div class="container-fluid mt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <!-- <table class="table table-light table-borderless table-hover text-center mb-0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Products</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody class="align-middle">
+                        <tr>
+                            <td class="align-middle"><img src="img/product-1.jpg" alt="" style="width: 50px;"> Product Name</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle"><img src="img/product-2.jpg" alt="" style="width: 50px;"> Product Name</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle"><img src="img/product-3.jpg" alt="" style="width: 50px;"> Product Name</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle"><img src="img/product-4.jpg" alt="" style="width: 50px;"> Product Name</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle"><img src="img/product-5.jpg" alt="" style="width: 50px;"> Product Name</td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle">
+                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-minus" >
+                                        <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm btn-primary btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="align-middle">$150</td>
+                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table> -->
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">Product</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total</th>
+                      <th scope="col">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <% for(let i=0;i<cart.items.length;i++) { %>
+                    <tr>
+                      <td scope="row"><%= productList[i].productName %></td>
+                      <td class="align-middle">$<%= productList[i].price %></td>
+                      <td class="align-middle border-0 ">
+                        
+                        <div class="input-group quantity mx-auto" style="width: 150px;">
+                            <div class="input-group-btn">
+                                <button onclick="decrementQuantity('<%= cart.items[i].productId %>', '<%= cart.userId %>')" class="btn btn-sm btn-primary btn-minus" >
+                                <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" style="min-width: 1.5rem;" value="<%= cart.items[i].quantity %>">
+                            <div class="input-group-btn">
+                                <button onclick="incrementQuantity('<%= cart.items[i].productId %>', '<%= cart.userId %>')" class="btn btn-sm btn-primary btn-plus"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        
+                      </td>
+                      <td class="align-middle">$<%= cart.items[i].totalPrice.toFixed(2) %></td>
+                      <td class="align-middle"><button onclick="removeItem('<%= cart.items[i].productId %>', '<%= cart.userId %>')" style="box-shadow: none;" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                    </tr>
+                    <% } %>
+
+                  </tbody>
+                </table>
+            </div>
+            <div class="col-lg-4">
+                <form class="mb-30" action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-0 form-control-sm bg-secondary text-light" placeholder="Coupon Code">
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-dark">Apply Coupon</button>
+                        </div>
+                    </div>
+                </form>
+                <h5 class="section-title position-relative text-uppercase mt-3 mb-3"><span class="bg-light">Cart Summary</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="border-bottom pb-2">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6>Subtotal</h6>
+                            <h6>$<%= cart.cartPrice.toFixed(2) %></h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">$0</h6>
+                        </div>
+                    </div>
+                    <div class="pt-2">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>Cart Total</h5>
+                            <h5>$<%= cart.cartPrice.toFixed(2) %></h5>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                          <button style="background-color: #7fad39;box-shadow: none;" class="col-6 btn btn-block btn-sm text-light font-weight-bold my-3">Proceed To Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+
+    <!-- axios cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+
+    <script>
+        function decrementQuantity(productId, userId){
+            axios.get(`/decrementQuantity?userId=${userId}&productId=${productId}`)
+            .then((result)=>{
+                if(result.data.response){
+                    location.reload();
+                }
+            })
+        }
+
+        function incrementQuantity(productId, userId){
+            axios.get(`/incrementQuantity?userId=${userId}&productId=${productId}`)
+            .then((result)=>{
+                if(result.data.response){
+                    location.reload();
+                }
+            })
+        }
+
+        function removeItem(productId, userId){
+            axios.delete(`/removeItem?userId=${userId}&productId=${productId}`)
+            .then((result)=>{
+                if(result.data.response){
+                    location.reload();
+                }
+            })
+        }
+    </script>
     
 
     <%- include('./partials/footer.ejs') %>

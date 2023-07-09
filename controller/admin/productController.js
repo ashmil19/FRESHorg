@@ -5,7 +5,8 @@ const multipleImage = require('../../utils/uploadImage');
 
 const loadProducts = async (req, res)=>{
     const products = await productModel.find();
-    res.render('admin/product',{products});
+    const categories = await categoryModel.find();
+    res.render('admin/product',{products, categories});
 }
 
 const loadAddProducts = async (req, res)=>{

@@ -7,6 +7,7 @@ const shopDetailsController = require('../controller/user/shopDetailsController'
 const profileController = require('../controller/user/profileController');
 const addressController = require('../controller/user/addressController');
 const cartController = require('../controller/user/cartController');
+const checkoutController = require('../controller/user/checkoutController');
 
 const adminAuth = require('../middleware/admin');
 const userAuth = require('../middleware/user');
@@ -43,8 +44,14 @@ router.get('/address/edit',userAuth.isLogin,addressController.loadEditAddress);
 router.post('/address/edit',addressController.editAddress);
 router.delete('/address/delete',addressController.deleteAddress);
 
-router.get('/cart',cartController.loadCart);
-router.get('/cart/add',userAuth.isLogin,cartController.addToCart);
+router.get('/cart',userAuth.isLogin,cartController.loadCart);
+router.get('/addToCart',cartController.addToCart);
+router.get('/decrementQuantity',cartController.quantityDecrement);
+router.get('/incrementQuantity',cartController.quantityIncrement);
+router.delete('/removeItem',cartController.removeItem);
+
+router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress)
+router.post('/checkout/addAddress',checkoutController.checkoutAddAddress);
 
 router.get('/logout',homeController.userLogout);
 

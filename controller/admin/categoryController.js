@@ -7,12 +7,8 @@ const loadCategory = async (req, res)=>{
         let productsValue = [];
         const categories = await categoryModel.find();
 
-        // categories.forEach( async (cat)=>{
-        //     productsValue.push(await productModel.findOne({category: cat._id}));
-        // })
-
         for(let i=0;i<categories.length;i++){
-            productsValue[i] = await productModel.findOne({category: categories[i].categoryName})
+            productsValue[i] = await productModel.findOne({category: categories[i]._id})
         }
     
         res.render('admin/category',{categories, productsValue});

@@ -194,10 +194,10 @@
                                         <p class="mb-0">Secondary Address</p>
                                     </div>
                                     <div class="card-body ">
-                                        <%= contact.phonenumber%>,<br>
-                                        <%= contact.buildingName %>, <%= contact.street %>, <br>
-                                        <%= contact.city %>, <%= contact.state %>, <br>
-                                        <%= contact.country %>, <br>
+                                        <%= s.phonenumber%>,<br>
+                                        <%= s.buildingName %>, <%= s.street %>, <br>
+                                        <%= s.city %>, <%= s.state %>, <br>
+                                        <%= s.country %>, <br>
                                         <a href="/address/edit?type=secondary&id=<%=s._id%>" class="btn btn-sm btn-dark">Edit</a>
                                         <a onclick="deleteAddress('<%=s._id%>')" class="btn btn-sm btn-danger">Delete</a>
                                     </div>

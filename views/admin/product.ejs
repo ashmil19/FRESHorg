@@ -31,7 +31,11 @@
                             <td><%= i+1 %></td>
                             <td><%= product.productName %></td>
                             <td><img style="width: 1.5rem;height: 1.5rem;" src="<%= product.image[0] %>" alt=""></td>
-                            <td><%= product.category %></td>
+                            <% categories.forEach((category)=>{ %>
+                                <% if(category._id == product.category){ %>
+                                <td><%= category.categoryName %></td>
+                                <% } %>
+                            <% }) %>
                             <td><%= product.price %></td>
                             <td><%= product.quantity %></td>
                             <td><a href="/admin/product/edit?id=<%= product._id %>">  <button type="button" class="btn btn-success">Edit</button></a></td>

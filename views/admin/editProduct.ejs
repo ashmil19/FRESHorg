@@ -32,7 +32,7 @@
                                                 <select class="form-select form-select-sm input-sm shadow-none" name="category">
                                                     
                                                     <% categories.forEach((category)=>{ %>
-                                                    <option value="<%= category.categoryName %>" <% if(product.category == category.categoryName ){ %> selected <% } %>><%= category.categoryName %></option>
+                                                    <option value="<%= category._id %>" <% if(product.category == category._id ){ %> selected <% } %>><%= category.categoryName %></option>
                                                     <% }) %>
 
                                                 </select>
