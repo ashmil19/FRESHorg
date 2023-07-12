@@ -1,0 +1,109 @@
+<%- include('./partials/header.ejs') %>
+
+
+<section class="checkout spad">
+    <div class="container">
+        <!-- <div class="row">
+            <div class="col-lg-12">
+                <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+                </h6>
+            </div>
+        </div> -->
+        <div class="checkout__form">
+            <h4>Billing Details</h4>
+            <form action="/checkout" method="post" >
+                <div class="row">
+                    <div class="col-lg-8 col-md-6">
+                        
+                        <form class=" col-md-7 col-sm-12">
+                            <div class="form-group">
+                                <div class="row" >
+                                    <div class="card-deck d-flex flex-wrap" >
+                                        <div id="cod-card" class="cardx card mb-4" style="min-width: 15rem;max-height: 4rem;">
+                                            <div class="card-body" role="button">
+                                              <h5 class="card-title"><input id="cod" value="cod" name="payment" type="radio">
+                                                <label for="cod">Cash On Delivery</label></h5>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="card-deck d-flex flex-wrap" >
+                                        <div id="Online-card" class="cardx card mb-4" style="min-width: 15rem;max-height: 4rem;">
+                                            <div class="card-body" role="button" >
+                                              <h5 class="card-title"><input id="Online" value="online" name="payment" type="radio">
+                                                <label for="Online">Online Payment</label></h5>
+                                            </div>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="address" value="<%= addressId %>">
+                        </form>
+
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4>Your Order</h4>
+                            <div class="checkout__order__products">Products <span>Total</span></div>
+                            <ul>
+                                <% for(let i=0;i<cart.items.length;i++){ %>
+                                    <li><%= productList[i].productName %> <span>$<%= cart.items[i].totalPrice.toFixed(2) %></span></li>
+                                <% } %>
+                            </ul>
+                            <div class="checkout__order__subtotal">Subtotal <span>$<%= cart.cartPrice.toFixed(2) %></span></div>
+                            <div class="checkout__order__total">Total <span>$<%= cart.cartPrice.toFixed(2) %></span></div>
+                            
+                            <button type="submit" class="site-btn rounded">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // $('input:radio').change(function () {//Clicking input radio
+            //     var radioClicked = $(this).attr('id');
+            //     unclickRadio();
+            //     removeActive();
+            //     clickRadio(radioClicked);
+            //     makeActive(radioClicked);
+            // });
+            $(".cardx").click(function () {//Clicking the card
+                var inputElement = $(this).find('input[type=radio]').attr('id');
+                console.log(inputElement);
+                btnShow();
+                unclickRadio();
+                removeActive();
+                makeActive(inputElement);
+                clickRadio(inputElement);
+            });
+        });
+
+        function btnShow() {
+            $("#address-btn").css("display", "block");
+        }
+
+        function unclickRadio() {
+            $("input:radio").prop("checked", false);
+        }
+
+        function clickRadio(inputElement) {
+            $("#" + inputElement).prop("checked", true);
+        }
+
+        function removeActive() {
+            $(".card").removeClass("active");
+        }
+
+        function makeActive(element) {
+            $("#" + element + "-card").addClass("active");
+        }
+    </script>
+
+<%- include('./partials/footer.ejs') %>

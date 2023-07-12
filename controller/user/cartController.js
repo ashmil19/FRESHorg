@@ -1,19 +1,26 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const cartModel = require('../../models/cartModel');
-const productModel = require('../../models/productModel')
+const productModel = require('../../models/productModel');
+const userModel = require('../../models/userModel');
 
 const loadCart = async (req, res)=>{
+    const id = req.session.user_id;
+    const user = await userModel.findOne({_id: id});
     const cart = await cartModel.findOne({userId: req.session.user_id})
     let productList = [];
-    const product = await cartModel
+    if(cart){
+        const product = await cartModel
                             .findOne({userId: req.session.user_id})
                             .populate("items.productId");
-
-    product.items.forEach((item)=>{
-        productList.push(item.productId)
-    })
+        
+        product.items.forEach((item)=>{
+            productList.push(item.productId)
+        })
+    }
     
-    res.render("user/cart",{cart, productList});
+    console.log(cart);
+    
+    res.render("user/cart",{id, user, cart, productList});
 }
 
 
@@ -29,19 +36,33 @@ const addToCart = async (req, res)=>{
         
         const cart = await cartModel.findOne({userId: userId});
         const product = await productModel.findOne({_id: productId});
-    
+
+        const cartProduct = cart.items.find((item) => item.productId == productId)
+
+      
+        
+       
         if(cart){
 
             let productExist = await cartModel.findOne({userId: userId, "items.productId": productId});
 
             if(productExist){
-                await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
-                {
-                    $inc: {
-                        "items.$.quantity": 1,
-                        "items.$.totalPrice": product.price,
-                    }
-                })
+
+                
+                if(cartProduct.quantity >= product.quantity){
+                    res.json({response: false})
+                }else{
+
+                    
+                    await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
+                    {
+                        $inc: {
+                            "items.$.quantity": 1,
+                            "items.$.totalPrice": product.price,
+                        }
+                    })
+        
+                }
             }else{
                 await cartModel.findOneAndUpdate({userId: userId},
                     {
@@ -105,15 +126,17 @@ const quantityDecrement = async (req, res)=>{
         const {userId , productId} = req.query;
 
         const product = await productModel.findOne({_id: productId});
+       
 
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
-            {
-                $inc: {
-                    "items.$.quantity": -1,
-                    "items.$.totalPrice": -product.price,
-                    cartPrice: -product.price,
-                }
-            })
+        {
+            $inc: {
+                "items.$.quantity": -1,
+                "items.$.totalPrice": -product.price,
+                cartPrice: -product.price,
+            }
+        })
+
 
         res.json({response: true})
         
@@ -139,7 +162,7 @@ const quantityIncrement = async (req, res)=>{
                     "items.$.totalPrice": product.price,
                     cartPrice: product.price,
                 }
-            })
+        })
 
         res.json({response: true})
         
@@ -159,15 +182,50 @@ const removeItem = async (req, res)=>{
             userId,
         } = req.query;
     
-        console.log(productId);
-        console.log(userId);
-    
+        // console.log(productId);
+        // console.log(userId);
+        
+
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
             {
                 $pull: {
                     "items": {productId: productId}
                 }
             })
+
+        const cart = await cartModel.findOne({userId: userId})
+
+        
+        if(cart.items.length > 0){
+
+            const cartTotalPrice = await cartModel.aggregate([
+                {
+                    $match: {userId: new ObjectId(userId)}
+                },
+                {
+                    $unwind: "$items"
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalcost: {$sum: "$items.totalPrice"}
+                    } 
+                }
+                
+            ])
+            
+            await cartModel.updateOne(
+                {userId: userId},
+                {$set: {cartPrice: cartTotalPrice[0].totalcost }}
+            )
+
+        }else{
+
+            await cartModel.updateOne({userId: userId},{cartPrice: 0});
+
+        }
+
+        
     
         res.json({response: true})
         

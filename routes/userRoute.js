@@ -8,6 +8,8 @@ const profileController = require('../controller/user/profileController');
 const addressController = require('../controller/user/addressController');
 const cartController = require('../controller/user/cartController');
 const checkoutController = require('../controller/user/checkoutController');
+const orderController = require('../controller/user/orderController');
+const categoryController = require('../controller/user/catergoryController');
 
 const adminAuth = require('../middleware/admin');
 const userAuth = require('../middleware/user');
@@ -29,6 +31,7 @@ router.post('/forgotPassword/newPassword',authController.newPassword);
 
 router.get('/shop',shopController.loadShop);
 router.get('/shopDetails',shopDetailsController.loadShopDetails);
+router.get('/category',categoryController.loadCategory);
 
 router.get('/profile',userAuth.isLogin,profileController.loadProfile);
 router.get('/profile/edit',userAuth.isLogin,profileController.loadEditUser);
@@ -52,6 +55,10 @@ router.delete('/removeItem',cartController.removeItem);
 
 router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress)
 router.post('/checkout/addAddress',checkoutController.checkoutAddAddress);
+router.get('/checkout',userAuth.isLogin,checkoutController.selectAddress);
+router.post('/checkout',checkoutController.checkout);
+
+router.get('/order',userAuth.isLogin,orderController.loadorder)
 
 router.get('/logout',homeController.userLogout);
 

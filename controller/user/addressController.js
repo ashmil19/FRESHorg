@@ -8,7 +8,7 @@ const loadAddress = async (req, res)=>{
     const mainAddress = await addressModel.findOne({user: id,type: "main"});
     const secondaryAddress = await addressModel.find({user: id,type: "secondary"});
     console.log(contactAddress);
-    res.render("user/address",{user: userData, contact: contactAddress,main: mainAddress, secondary: secondaryAddress});
+    res.render("user/address",{id, user: userData, contact: contactAddress,main: mainAddress, secondary: secondaryAddress});
 }
 
 const loadAddAddress = (req, res)=>{

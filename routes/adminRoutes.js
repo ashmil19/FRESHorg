@@ -4,6 +4,7 @@ const dashboardController = require('../controller/admin/dashboardController');
 const categoryController = require('../controller/admin/categoryController');
 const productController = require('../controller/admin/productController');
 const adminUserController = require('../controller/admin/userController');
+const orderController = require('../controller/admin/orderController')
 
 const adminAuth = require('../middleware/admin');
 
@@ -22,6 +23,10 @@ router.post('/product/add',productController.addProducts);
 router.get('/product/edit',adminAuth.isLogin,productController.loadEditProduct);
 router.post('/product/edit',productController.editProduct);
 router.get('/product/delete',productController.deleteProduct);
+
+router.get('/order',adminAuth.isLogin,orderController.loadorder);
+router.get('/orderDetails',adminAuth.isLogin,orderController.loadOrderDetails);
+router.post('/order/status',orderController.statusChange);
 
 router.get('/user',adminAuth.isLogin,adminUserController.loadUser);
 router.get('/user/edit',adminAuth.isLogin,adminUserController.loadEditUser);

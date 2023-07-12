@@ -122,9 +122,8 @@
                                             <div class="row">
                                                 <%= user.username %>
                                             </div>
-                                            <div style="font-size: .75rem;" class="row">
-                                                <%=user.createdAt.toLocaleDateString('en-US', { month: 'long' ,
-                                                    day: 'numeric' , year: 'numeric' ,});%></div>
+                                            <div style="font-size: .75rem;" class="row"><%=user.createdAt.toLocaleDateString('en-US', { month: 'long' ,
+                                                day: 'numeric' , year: 'numeric' ,});%></div>
                                         </div>
                                     </div>
                                 </div>
@@ -136,116 +135,45 @@
                             <div style="border: .05rem solid rgb(174, 171, 171);min-height: 2rem">
                                 <a href="/profile" class="nav-link text-dark">Profile</a>
                             </div>
-                            <div style="border: .05rem solid rgb(174, 171, 171);min-height: 2rem"><a href="/order"
-                                    class="nav-link text-dark">Orders</a></div>
+                            <div style="border: .05rem solid rgb(174, 171, 171);background-color: #7FAD39;min-height: 2rem"><a href="/order"
+                                    class="nav-link text-light">Orders</a></div>
                             <div
-                                style="border: .05rem solid rgb(174, 171, 171);background-color: #7FAD39;min-height: 2rem">
-                                <a href="/address" class="nav-link text-light">Address</a></div>
+                                style="border: .05rem solid rgb(174, 171, 171);min-height: 2rem">
+                                <a href="/address" class="nav-link text-dark">Address</a></div>
                         </div>
                     </div>
 
                 </div>
             </div>
-            <div class="col-sm-8 d-flex flex-column">
-                
-                <div class="d-flex flex-wrap w-100 mt-4">
-                    <% if(contact) { %>
-                    <div class=" col-sm-6">
-                      <div class="card text-center">
-                        <div class="card-header bg-light py-4 ">
-                            <p class="mb-0">Contact Address</p>
-                        </div>
-                        <div class="card-body ">
-                            <%= contact.phonenumber%>,<br>
-                            <%= contact.buildingName %>, <%= contact.street %>, <br>
-                            <%= contact.city %>, <%= contact.state %>, <br>
-                            <%= contact.country %>, <br>
-                            <a href="/address/edit?type=contact&id=<%= contact._id %>"" class="btn btn-sm btn-dark">Edit</a>
-                        </div>
-                      </div>
-                    </div>
-                    <% }else { %>
-                        <div class=" col-sm-6">
+            
+            <div class="col-md-7  mt-4">
+                    <% for(let i=0;i<products.length;i++){  %>
+                    <div class="row mb-3">
+                        <div class="col-md-12 col-sm-12">
                             <div class="card text-center">
-                                <div class="card-header bg-light py-4 ">
-                                    <p class="mb-0">Add Contact Address</p>
-                                </div>
-                                <div class="card-body ">
-                                    <h4 class="mb-0">Shipping Address</h4>
-                                    <p class="mb-0">Contact</p>
-                                    <a href="/address/add?type=contact" class="btn btn-sm btn-dark">Add new
-                                        Address</a>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
-
-                    <% if(main) { %>
-                    <div class="col-sm-6">
-                      <div class="card text-center">
-                        <div class="card-header bg-light py-4 ">
-                            <p class="mb-0">Main Address</p>
-                        </div>
-                        <div class="card-body">
-                            <%= contact.phonenumber%>,<br>
-                            <%= contact.buildingName %>, <%= contact.street %>, <br>
-                            <%= contact.city %>, <%= contact.state %>, <br>
-                            <%= contact.country %>, <br>
-                            <a href="/address/edit?type=main&id=<%= main._id %>"" class="btn btn-sm btn-dark">Edit</a>
-                        </div>
-                      </div>
-                    </div>
-                    <% }else { %>
-                        <div class=" col-sm-6">
-                            <div class="card text-center">
-                                <div class="card-header bg-light py-4 ">
-                                    <p class="mb-0">Add Main Address</p>
-                                </div>
-                                <div class="card-body ">
-                                    <h4 class="mb-0">Shipping Address</h4>
-                                    <p class="mb-0">Main</p>
-                                    <a href="/address/add?type=main" class="btn btn-sm btn-dark">Add new
-                                        Address</a>
-                                </div>
-                            </div>
-                        </div>
-                    <% } %>
-                </div>
-
-                <div class="d-flex flex-wrap w-100 mt-4 mb-4">
-                    <% if(secondary) { %>
-                        <%for(s of secondary){%>
-                            <div class=" col-sm-6 mb-4">
-                                <div class="card text-center">
-                                    <div class="card-header bg-light py-4 ">
-                                        <p class="mb-0">Secondary Address</p>
+                                <div class="card-body d-flex justify-content-between">
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex justify-content-start"><img class="rounded" style="width: 3rem;height: 3rem;" src="<%= products[i].product.image[0] %>" alt=""></div>
+                                        <div class="d-flex flex-column align-items-start" style="font-size: .80rem;">
+                                            <div>Quantity: <%=orders.order_date.toLocaleDateString('en-US', { 
+                                                month: 'long', 
+                                                day: 'numeric',
+                                                year: 'numeric',});%></div>
+                                            <div>Product: <%= products[i].product.productName %></div>
+                                            <div>Quantity: <%= products[i].quantity %></div>
+                                        </div>
                                     </div>
-                                    <div class="card-body ">
-                                        <%= s.phonenumber%>,<br>
-                                        <%= s.buildingName %>, <%= s.street %>, <br>
-                                        <%= s.city %>, <%= s.state %>, <br>
-                                        <%= s.country %>, <br>
-                                        <a href="/address/edit?type=secondary&id=<%=s._id%>" class="btn btn-sm btn-dark">Edit</a>
-                                        <a onclick="deleteAddress('<%=s._id%>')" class="btn btn-sm btn-danger">Delete</a>
+                                    <div class="d-flex flex-column align-items-center justify-content-center">
+                                        <div style="font-size: .90rem;" class="<% if(orders.order_status=='pending') {%> text-warning <% }else if(orders.order_status=='rejected') {%> text-danger <% }else{ %> text-secondary <% } %>"><%= orders.order_status %></div>
+                                        <% if(orders.order_status == "pending"){ %>
+                                        <kbd href="#" class="btn-danger mt-2">cancel</kbd>
+                                        <% } %>
                                     </div>
                                 </div>
                             </div>
-                        <% } %>
-                    <% } %>
-
-                        <div class=" col-sm-6">
-                            <div class="card text-center">
-                                <div class="card-header bg-light py-4 ">
-                                    <p class="mb-0">Add Secondary Address</p>
-                                </div>
-                                <div class="card-body ">
-                                    <h4 class="mb-0">Shipping Address</h4>
-                                    <p class="mb-0">Secondary</p>
-                                    <a href="/address/add?type=secondary" class="btn btn-sm btn-dark">Add new
-                                        Address</a>
-                                </div>
-                            </div>
                         </div>
+                    </div>
+                    <% } %>
 
                 </div>
             </div>

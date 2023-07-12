@@ -179,7 +179,7 @@
                             </div>
                         </div>
                         <div class="col d-flex justify-content-center mt-3 mb-4">
-                            <a href="#" id="address-btn" style="display: none;" class="btn btn-success">continue</a>
+                            <a onclick="selectAddress('<%= id %>')" id="address-btn" style="display: none;" class="btn btn-success text-light">continue</a>
                         </div>
                     </form>
                     <% } %>
@@ -256,6 +256,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script>
+        let inputElement;
         $(document).ready(function () {
             // $('input:radio').change(function () {//Clicking input radio
             //     var radioClicked = $(this).attr('id');
@@ -265,7 +266,7 @@
             //     makeActive(radioClicked);
             // });
             $(".cardx").click(function () {//Clicking the card
-                var inputElement = $(this).find('input[type=radio]').attr('id');
+                inputElement = $(this).find('input[type=radio]').attr('id');
                 console.log(inputElement);
                 btnShow();
                 unclickRadio();
@@ -274,6 +275,11 @@
                 clickRadio(inputElement);
             });
         });
+
+        function selectAddress(id){
+            window.location.href= `/checkout?addressId=${inputElement}&userId=${id}`
+            console.log('userid',id);
+        }
 
         function btnShow() {
             $("#address-btn").css("display", "block");

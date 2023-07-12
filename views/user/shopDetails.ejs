@@ -188,14 +188,23 @@
                                 </div>
                             </div> -->
                             
+                            <div class="mb-2">
+                                <% if(product.quantity !== 0){ %>
+                                <button onclick="addToClick('<%=product._id%>')" style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light" <% if(!userId) {%> disabled <% } %>  >ADD TO CART</button>
+                                <button href="#" style="border: none;" class="heart-icon" <% if(!userId) {%> disabled <% } %>  ><span class="icon_heart"></span></button>
+                                <% }else{ %>
+                                    <kbd class="bg-danger text-dark"><b>No Stock Available</b></kbd>
+                                    <div class="mt-2"><b>Please try after some time!</b></div>
+                                <%  } %>
+                            </div>
                             
-                            <button onclick="addToClick('<%=product._id%>')" style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light" <% if(!userId) {%> disabled <% } %>  >ADD TO CARD</button>
-                            <button href="#" style="border: none;" class="heart-icon" <% if(!userId) {%> disabled <% } %>  ><span class="icon_heart"></span></button>
-                            
+                            <% if(product.quantity !== 0 && product.quantity < 5){ %>
+                            <kbd>Only <%= product.quantity %> stock left</kbd>
+                            <% } %>
 
                             <ul>
                                 <li><b>Weight</b> <span>1 kg</span></li>
-                                <li><b>Availability</b> <span>In Stock</span></li>
+                                <!-- <li><b>Availability</b> <span>In Stock</span></li> -->
                                 <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
                             </ul>
                         

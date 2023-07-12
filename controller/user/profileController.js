@@ -6,7 +6,7 @@ const hash = require('../../utils/toHash')
 const loadProfile = async (req, res)=>{
     const id = req.session.user_id;
     const userData = await userModel.findOne({_id: id});
-    res.render("user/profile",{user: userData});
+    res.render("user/profile",{id, user: userData});
 }
 
 const loadEditUser = async (req, res)=>{

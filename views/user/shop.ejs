@@ -112,7 +112,7 @@
                             <h4>Categories</h4>
                             <ul>
                                 <% categories.forEach((category)=>{ %>
-                                    <li><a href="#"><%= category.categoryName %></a></li>
+                                    <li><a href="/category?catId=<%= category._id %>"><%= category.categoryName %></a></li>
                                 <% }) %>
                             </ul>
                         </div>
