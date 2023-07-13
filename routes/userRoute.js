@@ -59,6 +59,7 @@ router.get('/checkout',userAuth.isLogin,checkoutController.selectAddress);
 router.post('/checkout',checkoutController.checkout);
 
 router.get('/order',userAuth.isLogin,orderController.loadorder)
+router.post('/order/cancel',orderController.removeOrder)
 
 router.get('/logout',homeController.userLogout);
 

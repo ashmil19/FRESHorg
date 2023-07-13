@@ -147,6 +147,7 @@
             </div>
             
             <div class="col-md-7  mt-4">
+                <% if(orders !== null){ %>
                     <% for(let i=0;i<products.length;i++){  %>
                     <div class="row mb-3">
                         <div class="col-md-12 col-sm-12">
@@ -166,7 +167,7 @@
                                     <div class="d-flex flex-column align-items-center justify-content-center">
                                         <div style="font-size: .90rem;" class="<% if(orders.order_status=='pending') {%> text-warning <% }else if(orders.order_status=='rejected') {%> text-danger <% }else{ %> text-secondary <% } %>"><%= orders.order_status %></div>
                                         <% if(orders.order_status == "pending"){ %>
-                                        <kbd href="#" class="btn-danger mt-2">cancel</kbd>
+                                        <kbd onclick="removeOrder('<%= orders.items[i] %>', '<%= orders._id %>')" class="btn-danger mt-2">cancel</kbd>
                                         <% } %>
                                     </div>
                                 </div>
@@ -174,10 +175,16 @@
                         </div>
                     </div>
                     <% } %>
+                    <% } else {%>
+                        <div class="h-100 d-flex justify-content-center align-items-center">
+                            <div class="h1 text-danger">There Is No Orders</div>
+                        </div>
+                    <% } %>
 
                 </div>
             </div>
         </div>
+        
 
     </div>
     </div>
@@ -209,6 +216,23 @@
               
             }
           });
+        }
+
+        function removeOrder(orderItemId, orderId){
+            console.log(orderItemId);
+            console.log(orderId);
+            axios({
+                method: "post",
+                url: `/order/cancel`,
+                data: {
+                    orderItemId, orderId
+                }
+            })
+            .then((result)=>{
+                if(result.data.response){
+                    location.reload();
+                }
+            })
         }
       </script>
 

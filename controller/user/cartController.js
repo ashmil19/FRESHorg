@@ -37,7 +37,6 @@ const addToCart = async (req, res)=>{
         const cart = await cartModel.findOne({userId: userId});
         const product = await productModel.findOne({_id: productId});
 
-        const cartProduct = cart.items.find((item) => item.productId == productId)
 
       
         
@@ -48,7 +47,8 @@ const addToCart = async (req, res)=>{
 
             if(productExist){
 
-                
+                const cartProduct = cart.items.find((item) => item.productId == productId)
+
                 if(cartProduct.quantity >= product.quantity){
                     res.json({response: false})
                 }else{

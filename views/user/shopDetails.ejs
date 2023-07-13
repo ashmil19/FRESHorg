@@ -190,7 +190,7 @@
                             
                             <div class="mb-2">
                                 <% if(product.quantity !== 0){ %>
-                                <button onclick="addToClick('<%=product._id%>')" style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light" <% if(!userId) {%> disabled <% } %>  >ADD TO CART</button>
+                                <button  style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light"oncli <% if(userId) {%> onclick="addToClick('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  >ADD TO CART</button>
                                 <button href="#" style="border: none;" class="heart-icon" <% if(!userId) {%> disabled <% } %>  ><span class="icon_heart"></span></button>
                                 <% }else{ %>
                                     <kbd class="bg-danger text-dark"><b>No Stock Available</b></kbd>
@@ -282,6 +282,9 @@
     <!-- axios cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 
+    <!-- sweet alert cdn -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
 
         function addToClick(id){
@@ -302,6 +305,22 @@
                 
             })
                 
+        }
+
+        function notLogin(){
+            Swal.fire({
+                icon: "warning",
+                title: "You Are Not Login",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Login",
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    const currentUrl = location.href;
+                    location.href= `/login?url=${currentUrl}`
+                }
+            })
         }
 
     </script>

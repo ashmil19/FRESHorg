@@ -76,12 +76,14 @@ const verifyOtp = async (req, res)=>{
 
 
 const loadLogin = (req,res)=>{
-    res.render('auth/login',{message: null});
+    res.render('auth/login',{message: null, prevUrl: req.query.url});
 }
 
 const verifyLogin = async (req, res)=>{
 
     try{
+
+        console.log(req.query.prevUrl);
 
         const {email , password} = req.body;
         
@@ -100,7 +102,7 @@ const verifyLogin = async (req, res)=>{
                     if(userData.isVerified && userData.isAccess){
                         
                         req.session.user_id = userData._id;
-                        res.redirect('/');
+                        res.redirect(req.query.prevUrl);
                         
                     }else{
                         // you dont have the access

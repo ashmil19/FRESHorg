@@ -48,7 +48,7 @@ const statusChange = async (req, res)=>{
 
     const order = await orderModel.findOne({_id: id});
 
-    req.json({data: order})
+    res.json({data: order})
 }
 
 module.exports = {

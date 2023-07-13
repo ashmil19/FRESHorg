@@ -68,7 +68,7 @@
                             
 
 							<div class="header__top__right__auth">
-                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                                <a onclick="login()"><i class="fa fa-user"></i> Login</a>
                             </div>
 
                             <% } else {%>
@@ -194,6 +194,20 @@
         </div>
     </section>
     <!-- Product Section End -->
+
+
+     <!-- axios cdn -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+
+     <!-- sweet alert cdn -->
+     <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+     <script>
+        function login(){
+            const currentUrl = location.href;
+            location.href= `/login?url=${currentUrl}`
+        }
+     </script>
 
     
     
