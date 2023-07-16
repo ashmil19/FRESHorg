@@ -6,21 +6,41 @@ const userModel = require('../../models/userModel');
 const loadCart = async (req, res)=>{
     const id = req.session.user_id;
     const user = await userModel.findOne({_id: id});
-    const cart = await cartModel.findOne({userId: req.session.user_id})
+    let cart = await cartModel.findOne({userId: req.session.user_id})
     let productList = [];
+    let products;
     if(cart){
-        const product = await cartModel
+
+        for(const item of cart.items){
+            const product = await productModel.findOne({_id: item.productId});
+            
+            if(item.quantity > product.quantity){
+                await cartModel.updateOne(
+                    {
+                        userId: id,
+                        "items.productId": item.productId
+                    },
+                    {$set: {"items.$.quantity": product.quantity}}
+                )
+            }
+        }   
+
+
+
+        products = await cartModel
                             .findOne({userId: req.session.user_id})
                             .populate("items.productId");
         
-        product.items.forEach((item)=>{
+        products.items.forEach((item)=>{
             productList.push(item.productId)
         })
+        
     }
+
+    console.log(products)
+
     
-    console.log(cart);
-    
-    res.render("user/cart",{id, user, cart, productList});
+    res.render("user/cart",{id, user, products, productList});
 }
 
 

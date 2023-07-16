@@ -124,14 +124,19 @@ const checkout = async (req, res)=>{
 
     cart.items.forEach(async (item)=>{
         const product = await productModel.findOne({_id: item.productId});
-        await cartModel.updateMany(
-          {
-            "items.productId": item.productId,
-            "items.quantity": { $gt: product.quantity },
-          },
-          { $set: { "items.$.quantity": product.quantity } }
-        );
+        // await cartModel.updateMany(
+        //   {
+        //     "items.productId": item.productId,
+        //     "items.quantity": { $gt: product.quantity },
+        //   },
+        //   { $set: { "items.$.quantity": product.quantity } }
+        // );
 
+        // await cartModel.updateMany({
+        //     $or: [
+        //         { "items.productId": item.productId}
+        //     ]
+        // })
         
     })
 

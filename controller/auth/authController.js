@@ -83,7 +83,10 @@ const verifyLogin = async (req, res)=>{
 
     try{
 
-        console.log(req.query.prevUrl);
+        let PrevUrl = req.query.prevUrl
+        if(PrevUrl == ""){
+            PrevUrl = "/"
+        }
 
         const {email , password} = req.body;
         
@@ -102,7 +105,7 @@ const verifyLogin = async (req, res)=>{
                     if(userData.isVerified && userData.isAccess){
                         
                         req.session.user_id = userData._id;
-                        res.redirect(req.query.prevUrl);
+                        res.redirect(PrevUrl)
                         
                     }else{
                         // you dont have the access

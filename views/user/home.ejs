@@ -67,7 +67,7 @@
                             
 
 							<div class="header__top__right__auth">
-                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                                <a onclick="login()"><i class="fa fa-user"></i> Login</a>
                             </div>
 
                             <% } else {%>
@@ -158,7 +158,7 @@
                 <% for(let i=0;i<products.length;i++){ %>
                 <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
                     <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="<%= products[i].image[0] %>">
+                        <div class="featured__item__pic set-bg" data-setbg="<%= products[i].image[0].url %>">
                             <ul class="featured__item__pic__hover">
                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                 <li><a href="#"><i class="fa fa-info"></i></a></li>
@@ -195,6 +195,19 @@
         </div>
     </div>
     <!-- Banner End -->
+
+     <!-- axios cdn -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+
+     <!-- sweet alert cdn -->
+     <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+     <script>
+        function login(){
+            const currentUrl = location.href;
+            location.href= `/login?url=${currentUrl}`
+        }
+     </script>
     
 
     <%- include('./partials/footer.ejs') %>

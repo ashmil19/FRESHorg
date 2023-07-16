@@ -65,7 +65,7 @@
                             
 
 							<div class="header__top__right__auth">
-                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                                <a onclick="login()"><i class="fa fa-user"></i> Login</a>
                             </div>
 
                             <% } else {%>
@@ -156,12 +156,12 @@
                     <div class="product__details__pic">
                         <div class="product__details__pic__item">
                             <img class="product__details__pic__item--large"
-                                src="<%= product.image[0] %>" style="max-width: 10rem;max-height: 15rem;" alt="">
+                                src="<%= product.image[0].url %>" style="max-width: 10rem;max-height: 15rem;" alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
                             <% product.image.forEach((img)=>{ %>
-                            <img data-imgbigurl="<%= img %>"
-                                src="<%= img %>" alt="">
+                            <img data-imgbigurl="<%= img.url %>"
+                                src="<%= img.url %>" alt="">
                             <% }) %>
                         </div>
                     </div>
@@ -321,6 +321,11 @@
                     location.href= `/login?url=${currentUrl}`
                 }
             })
+        }
+
+        function login(){
+            const currentUrl = location.href;
+            location.href= `/login?url=${currentUrl}`
         }
 
     </script>

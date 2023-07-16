@@ -1,7 +1,7 @@
 const categoryModel = require('../../models/categoryModel');
 const productModel = require('../../models/productModel');
-const multipleImage = require('../../utils/uploadImage');
-
+const {multipleImage, imageUpload} = require('../../utils/uploadImage');
+const deleteImage = require('../../utils/deleteImage');
 
 const loadProducts = async (req, res)=>{
     const products = await productModel.find();
@@ -113,6 +113,77 @@ const deleteProduct = async (req, res)=>{
     }
 }
 
+const loadImages = async (req, res)=>{
+
+    try {
+
+        const { id } = req.query;
+        const product = await productModel.findOne({_id: id});
+
+        res.render('admin/editImages',{product});
+        
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
+
+
+const deleteProductImage = async (req, res)=>{
+    const { public_id, productId } = req.query;
+
+    await deleteImage(public_id);
+    
+   
+
+    await productModel.updateOne({_id: productId, "image.public_id": public_id},
+        {
+            $pull: {
+                "image": {public_id: public_id}
+            }
+        }
+    )
+
+
+
+    
+    res.json({response: true})
+}
+
+const loadAddImage = (req, res)=>{
+    try {
+
+        const {productId} = req.query;
+        
+        res.render('admin/addImage',{productId})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const editImage = async (req, res)=>{
+    try {
+
+        const { image } = req.files;
+        const { productId } = req.query;
+
+        const result = await imageUpload(image);
+
+        await productModel.updateOne({_id: productId},
+            {
+                $push: {
+                    image: result 
+                }
+            })
+        
+        res.redirect('/admin/product')
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     loadProducts,
     loadAddProducts,
@@ -120,5 +191,9 @@ module.exports = {
     loadEditProduct,
     editProduct,
     deleteProduct,
+    loadImages,
+    loadAddImage,
+    editImage,
+    deleteProductImage,
 }
 

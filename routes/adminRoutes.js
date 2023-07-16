@@ -22,6 +22,10 @@ router.get('/product/add',adminAuth.isLogin,productController.loadAddProducts);
 router.post('/product/add',productController.addProducts);
 router.get('/product/edit',adminAuth.isLogin,productController.loadEditProduct);
 router.post('/product/edit',productController.editProduct);
+router.get('/product/image',productController.loadImages);
+router.delete('/product/image/delete',productController.deleteProductImage)
+router.get('/product/image/add',productController.loadAddImage);
+router.post('/product/image/add',productController.editImage);
 router.get('/product/delete',productController.deleteProduct);
 
 router.get('/order',adminAuth.isLogin,orderController.loadorder);
