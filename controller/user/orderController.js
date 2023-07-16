@@ -6,18 +6,56 @@ const userModel = require("../../models/userModel");
 const loadorder = async (req, res)=>{
     const userId = req.session.user_id;
     const userData = await userModel.findOne({_id: userId});
-    const orders = await orderModel.findOne({user: userId});
+    const orders = await orderModel.find({user: userId});
 
-    let products = [];
-    if(orders){
+    // let products = [];
+    // if(orders){
 
-        for(const item of orders.items){
-            const product = await orderItemModel.findOne({_id: item}).populate("product")
-            products.push(product)
-        }
-    }
+    //     for(const order of orders){
+    //         const product = await orderItemModel.findOne({user}).populate("product")
+    //         products.push(product)
+    //     }
+    // }
+
+    const products = await orderModel.find({user: userId})
+                            .populate({
+                                path: 'items',
+                                model: 'orderItem',
+                                populate: {
+                                    path: 'product',
+                                    model: 'product'
+                                }
+                            })
+
     
-    res.render('user/order',{id: userId,products, orders, user: userData});
+    res.render('user/order',{id: userId, products, orders, user: userData});
+}
+
+const loadOrderDetails = async (req, res)=>{
+    try {
+
+        const userId = req.session.user_id; 
+        const { orderId } = req.query;
+
+        const user = await userModel.findOne({_id: userId});
+
+        const order = await orderModel.findOne({_id: orderId})
+                                .populate({
+                                    path: 'items',
+                                    model: 'orderItem',
+                                    populate: {
+                                        path: 'product',
+                                        model: 'product'
+                                    }
+                                }) 
+        
+        const cartAddress = await orderModel.findOne({_id: orderId}).populate("address");
+
+        res.render('user/orderDetails',{id: userId, user, order, address: cartAddress.address});
+        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const removeOrder = async (req, res)=>{
@@ -48,7 +86,10 @@ const removeOrder = async (req, res)=>{
 
 }
 
+
 module.exports = {
     loadorder,
+    loadOrderDetails,
     removeOrder,
+
 }
