@@ -37,8 +37,6 @@ const loadCart = async (req, res)=>{
         
     }
 
-    console.log(products)
-
     
     res.render("user/cart",{id, user, products, productList});
 }

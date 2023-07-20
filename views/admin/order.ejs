@@ -12,7 +12,7 @@
                     
                     <tr>
                         <th>sl.no</th>
-                        <th>Name</th>
+                        <th>Id</th>
                         <th>Date</th>
                         <th>Total</th>
                         <th>Status</th>
@@ -26,7 +26,7 @@
                         <% for(let i=0;i<orders.length;i++){ %>
                         <tr>
                             <td><%= i+1 %></td>
-                            <td><%= users[i].user.username %></td>
+                            <td><%= users[i]._id.toString().substring(0,6) %></td>
                             <td><%=orders[i].order_date.toLocaleDateString('en-US', { 
                                 month: 'long', 
                                 day: 'numeric',

@@ -8,9 +8,18 @@ const loadHome = async (req, res)=>{
     try{
 
         const id = req.session.user_id;
+
+        let search = '';
+        if(req.query.search){
+            search = req.query.search;
+        }
         
         const user = await userModel.findOne({_id: id});
-        const products = await productModel.find();
+
+        const products = await productModel.find({
+            productName: {$regex: new RegExp(search, 'i')}
+        });
+
         const categories = await categoryModel.find();
         res.render('user/home',{categories, products, user, id});
 
@@ -31,6 +40,8 @@ const userLogout = (req, res)=>{
         console.log(error);
     }
 }
+
+
 
 
 

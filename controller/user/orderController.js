@@ -1,7 +1,9 @@
+const addressModel = require("../../models/addressModel");
 const orderItemModel = require("../../models/orderItemModel");
 const orderModel = require("../../models/orderModel");
 const productModel = require("../../models/productModel");
 const userModel = require("../../models/userModel");
+const couponModel = require('../../models/couponModel');
 
 const loadorder = async (req, res)=>{
     const userId = req.session.user_id;
@@ -86,10 +88,33 @@ const removeOrder = async (req, res)=>{
 
 }
 
+const loadOrderSuccessPage = async (req, res)=>{
+    
+    const { orderId } = req.query;
+
+    const order = await orderModel.findOne({_id: orderId});
+    const user = await userModel.findOne({_id: order.user});
+    const address = await addressModel.findOne({_id: order.address});
+    
+    const product = await orderModel.findOne({_id: orderId})
+                                .populate({
+                                    path: 'items',
+                                    model: 'orderItem',
+                                    populate: {
+                                        path: 'product',
+                                        model: 'product'
+                                    }
+                                }) 
+    const coupon = await couponModel.findOne({_id: order.coupon})
+    console.log(coupon);
+
+    res.render('user/orderSuccess',{user, order, address, product, coupon});
+}
+
 
 module.exports = {
     loadorder,
     loadOrderDetails,
     removeOrder,
-
+    loadOrderSuccessPage,
 }

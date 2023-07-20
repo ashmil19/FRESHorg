@@ -1,5 +1,17 @@
 <%- include('./partials/header.ejs') %>
 
+<style>
+    #overlay{
+        width:600px;
+        height:450px;
+        display: none;
+        background-repeat:no-repeat;
+        position: absolute;
+        right: 150px;
+        z-index: 1;
+    }
+</style>
+
     <!-- Page Preloder -->
     <div id="preloder">
         <div class="loader"></div>
@@ -155,8 +167,8 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__pic">
                         <div class="product__details__pic__item">
-                            <img class="product__details__pic__item--large"
-                                src="<%= product.image[0].url %>" style="max-width: 10rem;max-height: 15rem;" alt="">
+                            <img id="imgZoom" onmousemove="zoomIn(event)" onmouseout="zoomOut()" class="product__details__pic__item--large"
+                                src="<%= product.image[0].url %>"  alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
                             <% product.image.forEach((img)=>{ %>
@@ -166,6 +178,8 @@
                         </div>
                     </div>
                 </div>
+                <div id="overlay" onmousemove="zoomIn(event)"></div>
+
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
                         
@@ -326,6 +340,26 @@
         function login(){
             const currentUrl = location.href;
             location.href= `/login?url=${currentUrl}`
+        }
+
+
+
+        function zoomIn(event) {
+            var element = document.getElementById("overlay");
+            element.style.display = "inline-block";
+            var img = document.getElementById("imgZoom");
+            const src = img.getAttribute('src');
+            var posX = event.offsetX ? (event.offsetX) : event.pageX - img.offsetLeft;
+            var posY = event.offsetY ? (event.offsetY) : event.pageY - img.offsetTop;
+
+            element.style.backgroundImage = `url(${src})`;
+
+            element.style.backgroundPosition=(-posX*2)+"px "+(-posY*2)+"px";
+        }
+
+        function zoomOut() {
+            var element = document.getElementById("overlay");
+            element.style.display = "none";
         }
 
     </script>

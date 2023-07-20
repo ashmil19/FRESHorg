@@ -37,7 +37,12 @@ const  orderSchema = schema({
     order_date: {
         type: Date,
         default: Date.now(),
-    }
+    },
+    coupon: {
+        type: mongoose.Types.ObjectId,
+        ref: "coupon"
+    },
+    
 })
 
 

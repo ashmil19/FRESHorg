@@ -20,12 +20,12 @@ const loadShopDetails = async (req, res)=>{
         await productModel.findOne({_id: id})
         .then((product)=>{
             if(!product){
-                res.send("hiiiiiiiiiiiiii");
+                res.render('user/404page');
             }
             res.render('user/shopDetails',{categories, product, products, userId, user});
         })
         .catch(err =>{
-            res.send("holiii");
+            res.render('user/404page');
         })
         
         

@@ -4,6 +4,7 @@ const cartModel = require("../../models/cartModel");
 const orderModel = require("../../models/orderModel");
 const orderItemModel = require("../../models/orderItemModel");
 const productModel = require("../../models/productModel");
+const couponModel = require("../../models/couponModel");
 
 const loadCheckoutAddress = async (req, res)=>{
     const id = req.session.user_id;
@@ -59,8 +60,11 @@ const checkoutAddAddress = async (req, res)=>{
 }
 
 const selectAddress = async (req, res)=>{
+
     const {addressId ,userId} = req.query;
+
     if(userId){
+        const address = await addressModel.findOne({_id: addressId})
         const cart = await cartModel.findOne({userId});
         let productList = [];
         const product = await cartModel
@@ -71,7 +75,7 @@ const selectAddress = async (req, res)=>{
             productList.push(item.productId)
         })
 
-        res.render('user/checkout',{cart, productList, addressId});
+        res.render('user/checkout',{cart, productList, address, coupon: null});
 
     }else{
 
@@ -88,8 +92,10 @@ const checkout = async (req, res)=>{
     const {
         payment,
         address,
+        couponId,
     } = req.body;
 
+        
     const cart = await cartModel.findOne({userId: userId});
 
     const orderItemIdList = Promise.all(cart.items.map(async (item)=>{
@@ -104,17 +110,38 @@ const checkout = async (req, res)=>{
 
     const items = await orderItemIdList;
 
-    
-    const newOrder = orderModel({
-        user: userId,
-        address: address,
-        items: items,
-        price: cart.cartPrice,
-        payment_status: false,
-        payment_method: payment,
-    })
+    if(payment == "cod"){
 
-    await newOrder.save()
+        if(couponId){
+            const coupon = await couponModel.findOne({_id: couponId});
+            var newOrder = orderModel({
+                user: userId,
+                address: address,
+                items: items,
+                price: cart.cartPrice - coupon.discount,
+                payment_status: false,
+                payment_method: payment,
+                coupon: couponId,
+            })
+
+            await newOrder.save()
+            
+        }else{
+
+            var newOrder = orderModel({
+                user: userId,
+                address: address,
+                items: items,
+                price: cart.cartPrice,
+                payment_status: false,
+                payment_method: payment,
+            })
+
+            await newOrder.save()
+        }
+    }
+
+
 
     cart.items.forEach( async (item)=>{
         const product = await productModel.findOne({_id: item.productId});
@@ -122,27 +149,10 @@ const checkout = async (req, res)=>{
             {$set: {quantity: product.quantity - item.quantity}})
     })
 
-    cart.items.forEach(async (item)=>{
-        const product = await productModel.findOne({_id: item.productId});
-        // await cartModel.updateMany(
-        //   {
-        //     "items.productId": item.productId,
-        //     "items.quantity": { $gt: product.quantity },
-        //   },
-        //   { $set: { "items.$.quantity": product.quantity } }
-        // );
-
-        // await cartModel.updateMany({
-        //     $or: [
-        //         { "items.productId": item.productId}
-        //     ]
-        // })
-        
-    })
 
     await cartModel.deleteOne({userId: userId});
 
-    res.redirect('/');
+    res.json({response: true, orderId: newOrder._id});
 
 }
 
