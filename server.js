@@ -1,40 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const cloudinary = require('cloudinary').v2;
 const session = require('express-session');
 const nocache = require('nocache');
+const fileUpload = require('express-fileupload');
 
+
+const mongodb = require('./config/mongo');
+const cloudinaryConnect = require('./config/cloudinary');
 const userRoutes = require('./routes/userRoute');
 const adminRoutes = require('./routes/adminRoutes');
-
-const fileUpload = require('express-fileupload');
 
 
 const app = express();
 
 // register view engine
 app.set('view engine', 'ejs');
-mongoose.set('strictQuery',false);
 
-mongoose
-    .connect(process.env.DATABASE_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(()=>{
-        console.log("connected to mongoDB");
-    })
-    .catch((err)=>{
-        console.log("Error connecting to mongoDB: ",err);
-    })
+//connecting mongoose
+mongodb();
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-})
+//connecting cloudinary
+cloudinaryConnect();
 
 // middlewares
 app.use(express.static('public'));
@@ -45,12 +32,14 @@ app.use(fileUpload({
     useTempFiles : true,
     limits: {fileSize: 50 * 2024 * 1024}
 }));
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     cookie: {sameSite: 'strict'},
     saveUninitialized: true,
     resave: false
 }));
+
 app.use(nocache());
 
 
