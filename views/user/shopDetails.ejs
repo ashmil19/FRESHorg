@@ -168,8 +168,8 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__pic">
-                        <div class="product__details__pic__item">
-                            <img id="imgZoom" onmousemove="zoomIn(event)" onmouseout="zoomOut()" class="product__details__pic__item--large"
+                        <div class="product__details__pic__item " >
+                            <img class="product__details__pic__item--large zoom" id="izoom"
                                 src="<%= product.image[0].url %>"  alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
@@ -181,7 +181,7 @@
                     </div>
                 </div>
 
-                <div id="overlay" onmousemove="zoomIn(event)"></div>
+                <!-- <div id="overlay" onmousemove="zoomIn(event)"></div> -->
 
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
@@ -301,6 +301,33 @@
 
     <!-- sweet alert cdn -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js'></script>
+      <a href="#">
+    
+    
+
+    <script>
+
+            $('.zoom').elevateZoom({
+                cursor: "crosshair",
+                zoomWindowFadeIn: 500,
+                zoomWindowFadeOut: 750,
+                zoomWindowOffetx: 10,
+            });
+
+        
+        
+
+        function addClass(){
+            $("#izoom").addClass("product__details__pic__item--large zoom")
+        }
+
+      </script>
 
     <script>
 

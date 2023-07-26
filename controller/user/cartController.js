@@ -20,7 +20,7 @@ const loadCart = async (req, res)=>{
                         userId: id,
                         "items.productId": item.productId
                     },
-                    {$set: {"items.$.quantity": product.quantity}}
+                    {$set: {"it2ems.$.quantity": product.quantity}}
                 )
             }
         }   
@@ -141,11 +141,12 @@ const addToCart = async (req, res)=>{
 const quantityDecrement = async (req, res)=>{
     try {
 
+
         const {userId , productId} = req.query;
 
         const product = await productModel.findOne({_id: productId});
        
-
+        
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
         {
             $inc: {
@@ -156,7 +157,7 @@ const quantityDecrement = async (req, res)=>{
         })
 
 
-        res.json({response: true})
+        res.send({response: true})
         
     } catch (error) {
 

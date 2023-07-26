@@ -56,6 +56,7 @@ router.delete('/removeItem',cartController.removeItem);
 router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress)
 router.post('/checkout/addAddress',checkoutController.checkoutAddAddress);
 router.get('/checkout',userAuth.isLogin,checkoutController.selectAddress);
+router.post('/razorpay',checkoutController.razorPayPaymet);
 router.post('/checkout',checkoutController.checkout);
 
 router.get('/order',userAuth.isLogin,orderController.loadorder);

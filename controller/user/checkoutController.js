@@ -6,6 +6,8 @@ const orderItemModel = require("../../models/orderItemModel");
 const productModel = require("../../models/productModel");
 const couponModel = require("../../models/couponModel");
 
+const Razorpay = require('razorpay');
+
 const loadCheckoutAddress = async (req, res)=>{
     const id = req.session.user_id;
 
@@ -86,6 +88,59 @@ const selectAddress = async (req, res)=>{
     
 }
 
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZOR_KEY_ID,
+    key_secret: process.env.RAZOR_KEY_SECRET,
+});
+
+
+const razorPayPaymet = async (req, res)=>{
+    try {
+
+        const { coupon } = req.body;
+
+        const userId = req.session.user_id;
+
+        const user = await userModel.findOne({_id: userId});
+        const cart = await cartModel.findOne({userId: userId});
+
+        let amount = cart.cartPrice * 100;
+
+        if(coupon){
+            const coupon = await couponModel.findOne({_id: req.body.coupon});
+            amount = (cart.cartPrice - coupon.discount) * 100; 
+        }
+        
+
+        const options = {
+            amount: amount,
+            currency: "INR",
+            receipt: "ashmilabdulrasheed@gmail.com",
+        }
+
+        razorpayInstance.orders.create(options,
+            (err, order)=>{
+                if(!err){
+                    res.status(200).send({
+                        success: true,
+                        msg: 'Order Created',
+                        order_id: order.id,
+                        amount: amount,
+                        key_id: process.env.RAZOR_KEY_ID,
+                        name: user.username,
+                        email: user.email,
+                    })
+                }else{
+                    res.status(400).send({success: false, msg: "something went wrong!"});
+                }
+            })
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: "something went wrong"});
+    }
+}
+
 const checkout = async (req, res)=>{
     const userId = req.session.user_id;
 
@@ -93,9 +148,10 @@ const checkout = async (req, res)=>{
         payment,
         address,
         couponId,
+        payment_id,
     } = req.body;
 
-        
+    // console.log(req.body);
     const cart = await cartModel.findOne({userId: userId});
 
     const orderItemIdList = Promise.all(cart.items.map(async (item)=>{
@@ -110,37 +166,64 @@ const checkout = async (req, res)=>{
 
     const items = await orderItemIdList;
 
-    if(payment == "cod"){
+    let newOrder = orderModel({
+        user: userId,
+        address: address,
+        items: items,
+        price: cart.cartPrice,
+        payment_status: false,
+        payment_method: payment,
+    });
+    
+    if(couponId){
+            
+        if(payment_id){
 
-        if(couponId){
-            const coupon = await couponModel.findOne({_id: couponId});
-            var newOrder = orderModel({
+            newOrder = orderModel({
                 user: userId,
                 address: address,
                 items: items,
-                price: cart.cartPrice - coupon.discount,
-                payment_status: false,
+                price: cart.cartPrice,
+                payment_status: true,
                 payment_method: payment,
                 coupon: couponId,
-            })
+                razorpay_order_id: payment_id,
+            });
 
-            await newOrder.save()
-            
         }else{
 
-            var newOrder = orderModel({
+            newOrder = orderModel({
                 user: userId,
                 address: address,
                 items: items,
                 price: cart.cartPrice,
                 payment_status: false,
                 payment_method: payment,
-            })
+                coupon: couponId,
+            });
 
-            await newOrder.save()
         }
+
+    }else{
+
+        if(payment_id){
+
+            newOrder = orderModel({
+                user: userId,
+                address: address,
+                items: items,
+                price: cart.cartPrice,
+                payment_status: true,
+                payment_method: payment,
+                razorpay_order_id: payment_id,
+            });
+
+        }
+
     }
 
+
+    await newOrder.save()
 
 
     cart.items.forEach( async (item)=>{
@@ -163,4 +246,5 @@ module.exports = {
     checkoutAddAddress,
     selectAddress,
     checkout,
+    razorPayPaymet,
 }

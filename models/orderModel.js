@@ -33,6 +33,7 @@ const  orderSchema = schema({
     },
     payment_method: {
         type: String,
+        required: true,
     },
     order_date: {
         type: Date,
@@ -42,6 +43,9 @@ const  orderSchema = schema({
         type: mongoose.Types.ObjectId,
         ref: "coupon"
     },
+    razorpay_order_id: {
+        type: String,
+    }
     
 })
 

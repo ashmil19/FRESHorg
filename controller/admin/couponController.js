@@ -107,15 +107,16 @@ const applyCoupon = async (req, res)=>{
             if(cartPrice >= coupon.minAmount){
 
                 const address = await addressModel.findOne({_id: addressId})
-                const cart = await cartModel.findOne({userId: address.user});
-                let productList = [];
-                const product = await cartModel
-                                        .findOne({userId: address.user})
-                                        .populate("items.productId");
+                // const cart = await cartModel.findOne({userId: address.user});
+                // let productList = [];
+                // const product = await cartModel
+                //                         .findOne({userId: address.user})
+                //                         .populate("items.productId");
 
-                product.items.forEach((item)=>{
-                    productList.push(item.productId)
-                })
+                // product.items.forEach((item)=>{
+                //     productList.push(item.productId)
+                // })
+                
 
                 res.json({response: true, coupon: coupon})
 

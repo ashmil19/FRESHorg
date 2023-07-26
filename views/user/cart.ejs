@@ -121,28 +121,32 @@
                     <tr>
                       <td scope="row"><%= productList[i].productName %></td>
                       <td class="align-middle">$<%= productList[i].price %></td>
-                      <td class="align-middle border-0 ">
+                      <td class="align-middle border-0" id="<%= products.items[i].productId._id %>">
                         
                         <div class="input-group quantity mx-auto" style="width: 150px;">
                             <div class="input-group-btn">
-                                <button onclick="decrementQuantity('<%= products.items[i].productId._id %>', '<%= products.userId %>')" class="btn btn-sm btn-primary btn-minus" <% if(products.items[i].quantity == 1) {%> disabled <% } %>>
+                                <button id="decrement" onclick="decrementQuantity('<%= products.items[i].productId._id %>', '<%= products.userId %>')" class="btn btn-sm btn-primary btn-minus" <% if(products.items[i].quantity <= 1) {%> disabled <% } %>>
                                 <i class="fa fa-minus"></i>
                                 </button>
                             </div>
-                            <input type="text" class="form-control form-control-sm bg-light border-0 text-center text-dark font-weight-bold" id="quantity" style="min-width: 1.5rem;" value="<%= products.items[i].quantity %>">
+                            <!-- <input type="text"  class="form-control form-control-sm bg-light border-0 text-center text-dark font-weight-bold" id="quantity" style="min-width: 1.5rem;" value="<%= products.items[i].quantity %>"> -->
+                            <div id="quantity" class="form-control form-control-sm bg-light border-0 text-center text-dark font-weight-bold" style="max-width: 2rem;"><%= products.items[i].quantity %></div>
                             <div class="input-group-btn">
                                 <button onclick="incrementQuantity('<%= products.items[i].productId._id %>', '<%= products.userId %>')" class="btn btn-sm btn-primary btn-plus"  <% if(productList[i].quantity <= products.items[i].quantity) {%> disabled <% } %> ><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
                         
                       </td>
-                      <td class="align-middle">$<%= products.items[i].totalPrice.toFixed(2) %></td>
+                      <td id="total" class="align-middle">$<%= products.items[i].totalPrice.toFixed(2) %></td>
                       <td class="align-middle"><button onclick="removeItem('<%= products.items[i].productId._id %>', '<%= products.userId %>')" style="box-shadow: none;" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
                     </tr>
                     <% } %>
 
                   </tbody>
                 </table>
+
+                <!-- <button id="test">click</button>
+                <div id="hello"></div> -->
             </div>
             <div class="col-lg-4">
                 
@@ -187,16 +191,45 @@
     </div>
     <!-- Cart End -->
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
     <!-- axios cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 
     <script>
+
+        // function decrementQuantity(productId, userId){
+            
+        //     axios.get(`/decrementQuantity?userId=${userId}&productId=${productId}`)
+        //     .then((result)=>{
+        //         if(result.data.response){
+        //             location.reload();
+        //         }
+        //     })
+        // }
+
         function decrementQuantity(productId, userId){
             
-            axios.get(`/decrementQuantity?userId=${userId}&productId=${productId}`)
-            .then((result)=>{
-                if(result.data.response){
-                    location.reload();
+            $.ajax({
+                type: "GET",
+                url: "/decrementQuantity",
+                data: {
+                    userId: userId,
+                    productId: productId,
+                },
+                success: function(res){
+                    if(res.response){
+                        
+                        $.get(location.href, function(data) {
+                            // $("#decrement").html($(data).find("#decrement").html());
+                            // $("#total").html($(data).find("#total").html());
+                            // $("#quantity").html($(data).find("#quantity").html());
+                            $(`#${productId}`).html($(data).find(`#${productId}`).html());
+                            
+                            
+                        });
+                    }
                 }
             })
         }
@@ -210,6 +243,15 @@
             })
         }
 
+        // function incrementQuantity(productId, userId){
+        //     axios.get(`/incrementQuantity?userId=${userId}&productId=${productId}`)
+        //     .then((result)=>{
+        //         if(result.data.response){
+        //             location.reload();
+        //         }
+        //     })
+        // }
+
         function removeItem(productId, userId){
             axios.delete(`/removeItem?userId=${userId}&productId=${productId}`)
             .then((result)=>{
@@ -218,6 +260,19 @@
                 }
             })
         }
+
+
+        // $('#decrement').click(()=>{
+            
+        //     axios.delete(`/removeItem?userId=${userId}&productId=${productId}`)
+        //     .then((result)=>{
+        //         if(result.data.response){
+        //             $('#quantity').load(" #quantity")
+        //         }
+        //     })
+        // })
+
+       
 
 
     </script>

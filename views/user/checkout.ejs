@@ -105,6 +105,8 @@
     <!-- sweet alert cdn -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script>
         $(document).ready(function () {
             // $('input:radio').change(function () {//Clicking input radio
@@ -190,27 +192,101 @@
             })
         })
 
+        function handleOnlinePayment(){
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            const addressId = document.getElementById('addressId').value;
+            const couponId = document.querySelector('.couponShow').id;
+
+            $.ajax({
+                url: "/razorpay",
+                type: "POST",
+                data: {
+                    coupon: couponId
+                },
+                success: function(res){
+                    if(res.success){
+                        var options = {
+                            "key": ""+res.key_id+"",
+                            "amount": ""+res.amount+"",
+                            "amount": "INR",
+                            "name": "FreshOrg",
+                            "image": "https://dummyimage.com/",
+                            "order_id": ""+res.order_id+"",
+                            "handler": function(response){
+
+                                axios({
+                                    method: "post",
+                                    url: '/checkout',
+                                    data: {
+                                        payment: payment,
+                                        address: addressId,
+                                        payment_id: response.razorpay_payment_id,
+                                        couponId: couponId,
+                                    }
+                                })
+                                .then((result)=>{
+                                    if(result.data.response){
+                                        location.href=`/order/success?orderId=${result.data.orderId}`;
+                                    }
+                                })
+
+                            },
+                            "prefill": {
+                                "name": ""+res.name+"",
+                                "email": ""+res.email+""
+                            },
+                            "theme": {
+                                "color": "#7fad39"
+                            }
+                        };
+                        var razorpayObject = new Razorpay(options);
+                        razorpayObject.on('payment.failed', function (response){
+                                alert("Payment Failed");
+                        });
+                        razorpayObject.open();
+                    }
+                }
+            })
+
+            
+            
+
+        }
+
 
         function placeorder(){
             const payment = document.querySelector('input[name="payment"]:checked').value;
             const addressId = document.getElementById('addressId').value;
             const couponId = document.querySelector('.couponShow').id;
 
-            axios({
-                method: "post",
-                url: '/checkout',
-                data: {
-                    payment: payment,
-                    address: addressId,
-                    couponId: couponId,
-                }
-            })
-            .then((result)=>{
-                if(result.data.response){
-                    location.href=`/order/success?orderId=${result.data.orderId}`;
-                }
-            })
+            if(payment == "online"){
+
+                handleOnlinePayment();
+                
+            }else{
+                axios({
+                    method: "post",
+                    url: '/checkout',
+                    data: {
+                        payment: payment,
+                        address: addressId,
+                        couponId: couponId,
+                    }
+                })
+                .then((result)=>{
+                    if(result.data.response){
+                        location.href=`/order/success?orderId=${result.data.orderId}`;
+                    }
+                })                
+            }
+
         }
+
+
+        
+
+
+        
     </script>
 
 <%- include('./partials/footer.ejs') %>
