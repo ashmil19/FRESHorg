@@ -31,9 +31,12 @@
                                 month: 'long', 
                                 day: 'numeric',
                                 year: 'numeric',}); %></td>
-                            <td>$<%= orders[i].price.toFixed(2) %></td>
+                            <td>&#8377;<%= orders[i].price.toFixed(2) %></td>
                             <td><%= orders[i].order_status %></td>
-                            <td><%if(orders[i].payment_method){ %>Cash on delivery<% } %></td>
+                            <td>
+                                <% if(orders[i].payment_method == "cod"){ %> Cash On Delivery <% } %>
+                                <% if(orders[i].payment_method == "online"){ %> Online Payment <% } %>
+                            </td>
                             <td><a href="/admin/orderDetails?userId=<%=users[i].user._id %>&orderId=<%= users[i]._id %>" class="btn btn-primary">view</a></td>
                         </tr>
                         <% } %>

@@ -10,6 +10,10 @@ const orderItemSchema = new schema({
     quantity: {
         type: Number,
         required: true,
+    },
+    productPrice: {
+        type: Number,
+        required: true,
     }
 })
 

@@ -109,16 +109,16 @@ const verifyLogin = async (req, res)=>{
                         
                     }else{
                         // you dont have the access
-                        res.render('auth/login',{message: "You don't have the access"});
+                        res.render('auth/login',{message: "You don't have the access",prevUrl:PrevUrl});
                     }
                 }
             }else{
                 // password is incorrect
-                res.render('auth/login',{message: "Password is incorrect"});
+                res.render('auth/login',{message: "Password is incorrect",prevUrl:PrevUrl});
             }
         }else{
             // user not found
-            res.render('auth/login',{message: "User not found"});
+            res.render('auth/login',{message: "User not found",prevUrl:PrevUrl});
         }
 
     }catch(err){

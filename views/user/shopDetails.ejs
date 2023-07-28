@@ -87,7 +87,7 @@
 
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                                <li id="cart"><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>  
                             </ul>
 
                             <div class="header__top__right__auth">
@@ -174,7 +174,7 @@
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
                             <% product.image.forEach((img)=>{ %>
-                            <img data-imgbigurl="<%= img.url %>"
+                            <img class="data-img" data-imgbigurl="<%= img.url %>"
                                 src="<%= img.url %>" alt="">
                             <% }) %>
                         </div>
@@ -195,7 +195,7 @@
                                 <i class="fa fa-star-half-o"></i>
                                 <span>(18 reviews)</span>
                             </div>
-                            <div class="product__details__price">$<%= product.price %></div>
+                            <div class="product__details__price">&#8377;<%= product.price %></div>
                             <p><%= product.blurb %></p>
                             <!-- <div class="product__details__quantity">
                                 <div class="quantity">
@@ -284,7 +284,7 @@
                         </div>
                         <div class="product__item__text">
                             <h6><a href="#"><%= product.productName %></a></h6>
-                            <h5>$<%= product.price %></h5>
+                            <h5>&#8377;<%= product.price %></h5>
                         </div>
                     </div>
                 </div>
@@ -320,6 +320,11 @@
                 zoomWindowOffetx: 10,
             });
 
+            // $('.product__details__pic__item--large').hover(()=>{
+            //     const i = $('.product__details__pic__item--large').attr('src');
+            //     console.log(i);
+            // })
+
         
         
 
@@ -340,7 +345,10 @@
                 if(result.data.response){
                     let x = document.getElementById("snackbar");
                     x.className = "show";
-                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);       
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                    $.get(location.href, function(data){
+                        $("#cart").html($(data).find("#cart").html());
+                    })
                 }else{
                     let x = document.getElementById("snackbar-error");
                     x.className = "show";

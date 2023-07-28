@@ -151,13 +151,14 @@ const checkout = async (req, res)=>{
         payment_id,
     } = req.body;
 
-    // console.log(req.body);
     const cart = await cartModel.findOne({userId: userId});
 
     const orderItemIdList = Promise.all(cart.items.map(async (item)=>{
+        const product = await productModel.findOne({_id: item.productId});
         const newItem = new orderItemModel({
             product: item.productId,
             quantity: item.quantity,
+            productPrice: product.price,
         })
 
         const newOrderItem = await newItem.save();
@@ -176,6 +177,8 @@ const checkout = async (req, res)=>{
     });
     
     if(couponId){
+
+        const coupon = await couponModel.findOne({_id: couponId});
             
         if(payment_id){
 
@@ -183,7 +186,7 @@ const checkout = async (req, res)=>{
                 user: userId,
                 address: address,
                 items: items,
-                price: cart.cartPrice,
+                price: cart.cartPrice - coupon.discount,
                 payment_status: true,
                 payment_method: payment,
                 coupon: couponId,
@@ -196,7 +199,7 @@ const checkout = async (req, res)=>{
                 user: userId,
                 address: address,
                 items: items,
-                price: cart.cartPrice,
+                price: cart.cartPrice - coupon.discount,
                 payment_status: false,
                 payment_method: payment,
                 coupon: couponId,

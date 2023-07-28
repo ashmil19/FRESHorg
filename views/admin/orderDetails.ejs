@@ -105,12 +105,19 @@
                                             </td>
                                             <td id="totalPrice"
                                                 class="product-subtotal text-center" style="font-size: 1vw;">
-                                                <span>$<%=(products[i].quantity * products[i].product.price).toFixed(2) %></span>
+                                                <span>&#8377;<%=(products[i].quantity * products[i].product.price).toFixed(2) %></span>
                                             </td>
                                         </tr>
                                         <% } %>
                                 </tbody>
                             </table>
+
+                            <div class="col-12 d-flex justify-content-end">
+                                <div class="d-flex flex-column w-25">
+                                    <kbd class="bg-warning text-dark font-weight-bolder d-flex justify-content-between">Coupon: <span>&#8377;<% if(coupon){ %><%= coupon.discount %><% }else{ %>0<% } %>.00</span></kbd>
+                                    <kbd class="font-weight-bolder mt-2 d-flex justify-content-between">Total: <span>&#8377;<%= order.price.toFixed(2) %></span></kbd>
+                                </div>
+                            </div>
                         </div>
                       </div>
                       <div class="card m-3">
@@ -132,6 +139,7 @@
                         </div>
                         <div class="card-body">
                             <% if(order.payment_method == "cod"){ %> Cash On Delivery <% } %>
+                            <% if(order.payment_method == "online"){ %> Online Payment <% } %>
                         </div>
                       </div>
                   </div>

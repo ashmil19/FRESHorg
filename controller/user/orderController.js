@@ -8,7 +8,7 @@ const couponModel = require('../../models/couponModel');
 const loadorder = async (req, res)=>{
     const userId = req.session.user_id;
     const userData = await userModel.findOne({_id: userId});
-    const orders = await orderModel.find({user: userId});
+    const orders = await orderModel.find({user: userId}).sort({order_date: -1});
 
     // let products = [];
     // if(orders){
@@ -27,7 +27,7 @@ const loadorder = async (req, res)=>{
                                     path: 'product',
                                     model: 'product'
                                 }
-                            })
+                            });
 
     
     res.render('user/order',{id: userId, products, orders, user: userData});
@@ -51,40 +51,50 @@ const loadOrderDetails = async (req, res)=>{
                                     }
                                 }) 
         
+        const coupon  = await couponModel.findOne({_id: order.coupon});
         const cartAddress = await orderModel.findOne({_id: orderId}).populate("address");
 
-        res.render('user/orderDetails',{id: userId, user, order, address: cartAddress.address});
+        res.render('user/orderDetails',{id: userId, user, order, coupon, address: cartAddress.address});
         
     } catch (error) {
         console.log(error);
     }
 }
 
-const removeOrder = async (req, res)=>{
-    const {
-        orderItemId,
-        orderId
-    } = req.body;
+const cancelOrder = async (req, res)=>{
 
-    console.log(orderItemId);
-    console.log(orderId);
+    try {
 
-    await orderModel.findOneAndUpdate({_id: orderId},
-        {
-            $pull: {items: orderItemId}
-        })
+        const {
+            orderId
+        } = req.body;
 
-    const cartProduct = await orderItemModel.findOne({_id: orderItemId});
-
+        const order = await orderModel.findOne({_id: orderId})
+                                    .populate('items');
     
-    await productModel.findOneAndUpdate({_id: cartProduct.product},
-        {
-            $inc: {quantity: cartProduct.quantity}
-        })
+    
+        await orderModel.findByIdAndUpdate(orderId,{order_status: "cancelled"})
+        
+        for(const item of order.items){
+            
+            await productModel.updateOne({_id: item.product },
+                {
+                    $inc: {quantity: item.quantity}
+                })
+    
+        }
 
-    await orderItemModel.deleteOne({_id: orderItemId})
+        res.send({response: true});
+        
+    } catch (error) {
 
-    res.json({response: true});
+        console.log(error);
+        
+    }
+    
+
+
+
 
 }
 
@@ -115,6 +125,6 @@ const loadOrderSuccessPage = async (req, res)=>{
 module.exports = {
     loadorder,
     loadOrderDetails,
-    removeOrder,
+    cancelOrder,
     loadOrderSuccessPage,
 }

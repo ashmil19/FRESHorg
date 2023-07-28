@@ -101,7 +101,7 @@
     <!-- Header Section End -->
 
     <div class="container-fluid mt-5">
-        <div class="row px-xl-5">
+        <div class="row px-xl-5" id="row">
             <% if(products){ %>
             <% if(products.items.length > 0) {%>
             <div class="col-lg-8 table-responsive mb-5">
@@ -118,10 +118,10 @@
                   <tbody>
 
                     <% for(let i=0;i<products.items.length;i++) { %>
-                    <tr>
+                    <tr id="<%= products.items[i].productId._id %>">
                       <td scope="row"><%= productList[i].productName %></td>
-                      <td class="align-middle">$<%= productList[i].price %></td>
-                      <td class="align-middle border-0" id="<%= products.items[i].productId._id %>">
+                      <td class="align-middle">&#8377;<%= productList[i].price %></td>
+                      <td class="align-middle border-0" >
                         
                         <div class="input-group quantity mx-auto" style="width: 150px;">
                             <div class="input-group-btn">
@@ -129,7 +129,6 @@
                                 <i class="fa fa-minus"></i>
                                 </button>
                             </div>
-                            <!-- <input type="text"  class="form-control form-control-sm bg-light border-0 text-center text-dark font-weight-bold" id="quantity" style="min-width: 1.5rem;" value="<%= products.items[i].quantity %>"> -->
                             <div id="quantity" class="form-control form-control-sm bg-light border-0 text-center text-dark font-weight-bold" style="max-width: 2rem;"><%= products.items[i].quantity %></div>
                             <div class="input-group-btn">
                                 <button onclick="incrementQuantity('<%= products.items[i].productId._id %>', '<%= products.userId %>')" class="btn btn-sm btn-primary btn-plus"  <% if(productList[i].quantity <= products.items[i].quantity) {%> disabled <% } %> ><i class="fa fa-plus"></i></button>
@@ -137,7 +136,7 @@
                         </div>
                         
                       </td>
-                      <td id="total" class="align-middle">$<%= products.items[i].totalPrice.toFixed(2) %></td>
+                      <td id="total" class="align-middle">&#8377;<%= products.items[i].totalPrice.toFixed(2) %></td>
                       <td class="align-middle"><button onclick="removeItem('<%= products.items[i].productId._id %>', '<%= products.userId %>')" style="box-shadow: none;" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
                     </tr>
                     <% } %>
@@ -145,21 +144,19 @@
                   </tbody>
                 </table>
 
-                <!-- <button id="test">click</button>
-                <div id="hello"></div> -->
             </div>
             <div class="col-lg-4">
                 
                 <h5 class="section-title position-relative text-uppercase mt-3 mb-3"><span class="bg-light">Cart Summary</span></h5>
                 <div class="bg-light p-30 mb-5">
                     <div class="border-bottom pb-2">
-                        <div class="d-flex justify-content-between mb-3">
+                        <div class="d-flex justify-content-between mb-3" id="subtotal"> 
                             <h6>Subtotal</h6>
-                            <h6>$<%= products.cartPrice.toFixed(2) %></h6>
+                            <h6 >&#8377;<%= products.cartPrice.toFixed(2) %></h6>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$0</h6>
+                            <h6 class="font-weight-medium">&#8377;0</h6>
                         </div>
                         <!-- <div class="d-flex justify-content-between">
                             <h6 class="font-weight-medium">Coupon</h6>
@@ -167,9 +164,9 @@
                         </div> -->
                     </div>
                     <div class="pt-2">
-                        <div class="d-flex justify-content-between mt-2">
+                        <div class="d-flex justify-content-between mt-2" id="carttotal">
                             <h5>Cart Total</h5>
-                            <h5>$<%= products.cartPrice.toFixed(2) %></h5>
+                            <h5>&#8377;<%= products.cartPrice.toFixed(2) %></h5>
                         </div>
                         <div class="d-flex justify-content-center">
                           <a href="/checkout/address" style="background-color: #7fad39;box-shadow: none;" class="col-6 btn btn-block btn-sm text-light font-weight-bold my-3">Proceed To Checkout</a>
@@ -199,16 +196,6 @@
 
     <script>
 
-        // function decrementQuantity(productId, userId){
-            
-        //     axios.get(`/decrementQuantity?userId=${userId}&productId=${productId}`)
-        //     .then((result)=>{
-        //         if(result.data.response){
-        //             location.reload();
-        //         }
-        //     })
-        // }
-
         function decrementQuantity(productId, userId){
             
             $.ajax({
@@ -222,12 +209,9 @@
                     if(res.response){
                         
                         $.get(location.href, function(data) {
-                            // $("#decrement").html($(data).find("#decrement").html());
-                            // $("#total").html($(data).find("#total").html());
-                            // $("#quantity").html($(data).find("#quantity").html());
                             $(`#${productId}`).html($(data).find(`#${productId}`).html());
-                            
-                            
+                            $("#carttotal").html($(data).find("#carttotal").html());
+                            $("#subtotal").html($(data).find("#subtotal").html());
                         });
                     }
                 }
@@ -235,42 +219,47 @@
         }
 
         function incrementQuantity(productId, userId){
-            axios.get(`/incrementQuantity?userId=${userId}&productId=${productId}`)
-            .then((result)=>{
-                if(result.data.response){
-                    location.reload();
+            
+            $.ajax({
+                type: "GET",
+                url: "/incrementQuantity",
+                data: {
+                    userId: userId,
+                    productId: productId,
+                },
+                success: function(res){
+                    if(res.response){
+                        
+                        $.get(location.href, function(data) {
+                            $(`#${productId}`).html($(data).find(`#${productId}`).html());
+                            $("#carttotal").html($(data).find("#carttotal").html());
+                            $("#subtotal").html($(data).find("#subtotal").html());
+                        });
+                    }
                 }
             })
-        }
 
-        // function incrementQuantity(productId, userId){
-        //     axios.get(`/incrementQuantity?userId=${userId}&productId=${productId}`)
-        //     .then((result)=>{
-        //         if(result.data.response){
-        //             location.reload();
-        //         }
-        //     })
-        // }
+        }
 
         function removeItem(productId, userId){
-            axios.delete(`/removeItem?userId=${userId}&productId=${productId}`)
-            .then((result)=>{
-                if(result.data.response){
-                    location.reload();
+
+            $.ajax({
+                type: "POST",
+                url: "/removeItem",
+                data: {
+                    userId: userId,
+                    productId: productId,
+                },
+                success: function(res){
+                    if(res.response){
+                        
+                        $.get(location.href, function(data) {
+                            $("#row").html($(data).find("#row").html());
+                        });
+                    }
                 }
             })
         }
-
-
-        // $('#decrement').click(()=>{
-            
-        //     axios.delete(`/removeItem?userId=${userId}&productId=${productId}`)
-        //     .then((result)=>{
-        //         if(result.data.response){
-        //             $('#quantity').load(" #quantity")
-        //         }
-        //     })
-        // })
 
        
 

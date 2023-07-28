@@ -20,7 +20,7 @@ const loadCart = async (req, res)=>{
                         userId: id,
                         "items.productId": item.productId
                     },
-                    {$set: {"it2ems.$.quantity": product.quantity}}
+                    {$set: {"items.$.quantity": product.quantity}}
                 )
             }
         }   
@@ -146,7 +146,7 @@ const quantityDecrement = async (req, res)=>{
 
         const product = await productModel.findOne({_id: productId});
        
-        
+
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
         {
             $inc: {
@@ -183,7 +183,7 @@ const quantityIncrement = async (req, res)=>{
                 }
         })
 
-        res.json({response: true})
+        res.send({response: true})
         
     } catch (error) {
 
@@ -199,10 +199,10 @@ const removeItem = async (req, res)=>{
         const {
             productId,
             userId,
-        } = req.query;
+        } = req.body;
     
         // console.log(productId);
-        // console.log(userId);
+        // console.log(req.body);
         
 
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
@@ -246,7 +246,7 @@ const removeItem = async (req, res)=>{
 
         
     
-        res.json({response: true})
+        res.send({response: true})
         
     } catch (error) {
         console.log(error);

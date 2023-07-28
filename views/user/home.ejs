@@ -75,7 +75,7 @@
 
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li> 
                             </ul>
 
                             <div class="header__top__right__auth">
@@ -167,7 +167,7 @@
                         </div>
                         <div class="featured__item__text">
                             <h6><a href="#"><%= products[i].productName %></a></h6>
-                            <h5>$<%= products[i].price %></h5>
+                            <h5>&#8377;<%= products[i].price %></h5>
                         </div>
                     </div>
                 </div>

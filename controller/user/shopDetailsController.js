@@ -1,3 +1,4 @@
+const cartModel = require('../../models/cartModel');
 const categoryModel = require('../../models/categoryModel');
 const productModel = require('../../models/productModel');
 const userModel = require('../../models/userModel');
@@ -11,6 +12,7 @@ const loadShopDetails = async (req, res)=>{
         const userId = req.session.user_id;
         
         const user = await userModel.findOne({_id: userId});
+        const cart = await cartModel.findOne({userId});
 
         const id = req.query.id;
 
@@ -22,7 +24,7 @@ const loadShopDetails = async (req, res)=>{
             if(!product){
                 res.render('user/404page');
             }
-            res.render('user/shopDetails',{categories, product, products, userId, user});
+            res.render('user/shopDetails',{categories, cart, product, products, userId, user});
         })
         .catch(err =>{
             res.render('user/404page');

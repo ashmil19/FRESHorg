@@ -1,14 +1,13 @@
 const orderModel = require("../../models/orderModel")
 const orderItemModel = require('../../models/orderItemModel');
 const userModel = require("../../models/userModel");
+const couponModel = require("../../models/couponModel");
 
 const loadorder = async (req, res)=>{
     
     const orders = await orderModel.find();
-    
     const users = await orderModel.find().populate("user");
 
-    console.log(orders);
     res.render('admin/order',{orders,users});
 }
 
@@ -23,6 +22,8 @@ const loadOrderDetails = async (req, res)=>{
     const user = await userModel.findOne({_id: userId});
     const order = await orderModel.findOne({_id: orderId});
     const cartAddress = await orderModel.findOne({_id: orderId}).populate("address");
+    const coupon = await couponModel.findOne({_id: order.coupon});
+
 
     let products = [];
     for(const item of order.items){
@@ -32,7 +33,7 @@ const loadOrderDetails = async (req, res)=>{
     
     console.log(products);
 
-    res.render('admin/orderDetails',{user, order, address: cartAddress.address, products});
+    res.render('admin/orderDetails',{user, order, coupon, address: cartAddress.address, products});
 }
 
 

@@ -51,7 +51,7 @@ router.get('/cart',userAuth.isLogin,cartController.loadCart);
 router.get('/addToCart',cartController.addToCart);
 router.get('/decrementQuantity',cartController.quantityDecrement);
 router.get('/incrementQuantity',cartController.quantityIncrement);
-router.delete('/removeItem',cartController.removeItem);
+router.post('/removeItem',cartController.removeItem);
 
 router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress)
 router.post('/checkout/addAddress',checkoutController.checkoutAddAddress);
@@ -61,7 +61,7 @@ router.post('/checkout',checkoutController.checkout);
 
 router.get('/order',userAuth.isLogin,orderController.loadorder);
 router.get('/order/details',userAuth.isLogin,orderController.loadOrderDetails);
-router.post('/order/cancel',orderController.removeOrder);
+router.post('/order/cancel',orderController.cancelOrder);
 router.get('/order/success',userAuth.isLogin,orderController.loadOrderSuccessPage)
 
 router.get('/logout',homeController.userLogout);

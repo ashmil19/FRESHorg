@@ -155,7 +155,8 @@
                       <div class="col">
                         <div class="card card-stepper" style="border-radius: 10px;">
                           <div class="card-body p-4">
-                
+                            
+                            <% if(order.order_status !== "cancelled"){ %>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-column">
                                 <span class="lead fw-normal">Track Your Order</span>
@@ -166,6 +167,7 @@
                                 <button class="btn btn-outline-primary" type="button">Track order details</button>
                               </div> -->
                             </div>
+                            
                             <hr class="my-4">
                 
                             <div class="d-flex flex-row justify-content-between align-items-center align-content-center">
@@ -184,6 +186,11 @@
                               
                               <div class="d-flex flex-column align-items-end"><span>Delivered</span></div>
                             </div>
+                            <% }else{ %>
+                                <div>
+                                    <div class="d-flex justify-content-center h3 text-danger font-weight-bold text-uppercase">Order Cancelled</div>
+                                </div>
+                            <% } %>
                 
                           </div>
                         </div>
@@ -197,6 +204,7 @@
                     Order details<br><small>Your order items</small>
                 </div>
                 <div class="card-body" style="overflow: auto;">
+                    <% subtotal = 0%>
                     <table class="table text-center table-primary">
                         <colgroup>
                             <col width="100" />
@@ -227,26 +235,33 @@
                                                 alt="..." class="img-fluid" width="60vw"></a>
                                     </td>
                                     <td class="text-center" style="font-size: 1.2vw;">
-                                        <b href="#" class="text-dark ">
+                                        <b class="text-dark ">
                                             <%=order.items[i].product.productName %>
                                         </b>
                                     </td>
                                     <td class="text-center text-dark" style="font-size: 1vw;">
-                                        <%=order.items[i].product.price %>
+                                        <b>
+                                            <%=order.items[i].productPrice %>
+                                        </b>
                                     </td>
                                     <td class="text-center" style="font-size: 1vw;"><span><%=order.items[i].quantity %></span>
                                     </td>
                                     <td id="totalPrice"
                                         class="product-subtotal text-center" style="font-size: 1vw;">
-                                        <span>$<%=(order.items[i].quantity * order.items[i].product.price).toFixed(2) %></span>
+                                        <span>&#8377;<%=(order.items[i].quantity * order.items[i].productPrice).toFixed(2) %></span>
                                     </td>
                                 </tr>
+                                <% subtotal += (order.items[i].quantity * order.items[i].productPrice) %>
                                 <% } %>
                         </tbody>
                     </table>
+
+
                     <div class="col-12 d-flex justify-content-end">
-                        <div class="d-flex">
-                            <kbd class="font-weight-bolder">totalPrice: <span>$<%= order.price.toFixed(2) %></span></kbd>
+                        <div class="d-flex flex-column w-25">
+                            <!-- <kbd class="font-weight-bolder mb-2 d-flex justify-content-between bg-secondary">Sub Total: <span>&#8377;<%= subtotal %>.00</span></kbd> -->
+                            <kbd class="bg-warning text-dark font-weight-bolder d-flex justify-content-between">Coupon: <span>- &#8377;<% if(coupon){ %><%= coupon.discount %><% }else{ %>0<% } %>.00</span></kbd>
+                            <kbd class="font-weight-bolder mt-2 d-flex justify-content-between">Total: <span>&#8377;<%= order.price.toFixed(2) %></span></kbd>
                         </div>
                     </div>
                 </div>
