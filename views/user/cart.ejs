@@ -74,7 +74,7 @@
 
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                                <li id="cart"><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(products){ %><%= products.items.length %><% }else{ %>0<% } %></span></a></li> 
                             </ul>
 
                             <div class="header__top__right__auth">
@@ -255,6 +255,7 @@
                         
                         $.get(location.href, function(data) {
                             $("#row").html($(data).find("#row").html());
+                            $("#cart").html($(data).find("#cart").html());
                         });
                     }
                 }

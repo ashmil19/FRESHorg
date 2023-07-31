@@ -1,0 +1,50 @@
+<%- include('./partials/header.ejs') %>
+
+    <div class="container-fluid d-flex gap-4" style="background-color: #EDF1F5;">
+        
+        <%- include('./partials/sidebar.ejs') %>
+
+        <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
+
+            <div class="table" >
+                <table class="table table-light table-striped table-responsive" >
+                <thead>
+                    
+                    <tr>
+                        <th>sl.no</th>
+                        <th>Banner</th>
+                        <th>Title</th>
+                        <th>Target Category</th>
+                        <th>Description</th>
+                        <th >Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    
+                </thead>
+                
+                <tbody>
+                    
+                    <% banners.forEach((banner, i)=>{ %>
+                    
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><img style="width: 1.5rem;height: 1.5rem;" src="<%= banner.bannerImage.url %>" alt=""></td>
+                            <td><%= banner.title %></td>
+                            <td><%= banner.targetCategory.categoryName %></td>
+                            <td><%= banner.description %></td>
+                            <td><a href="#"> <button type="button" class="btn btn-success">Edit</button></a></td>
+                            <td><a href="#">  <button type="button" class="btn btn-danger">Delete</button></a></td>
+                            
+                        </tr>
+                            
+                    <% }) %>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div >
+
+       
+    </div>
+
+    <%- include('./partials/footer.ejs') %>

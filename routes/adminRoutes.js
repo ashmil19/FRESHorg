@@ -6,6 +6,7 @@ const productController = require('../controller/admin/productController');
 const adminUserController = require('../controller/admin/userController');
 const orderController = require('../controller/admin/orderController')
 const couponController = require('../controller/admin/couponController');
+const bannerController = require('../controller/admin/bannerController');
 
 const adminAuth = require('../middleware/admin');
 
@@ -43,6 +44,10 @@ router.post('/coupon/add',couponController.addCoupon);
 router.get('/coupon/edit',adminAuth.isLogin,couponController.loadEditCoupon);
 router.post('/coupon/edit',couponController.editCoupon);
 router.post('/coupon/apply',couponController.applyCoupon);
+
+router.get('/banner',bannerController.loadBanner);
+router.get('/banner/add',bannerController.loadAddBanner);
+router.post('/banner/add',bannerController.addBanner);
 
 
 router.get('/logout',dashboardController.adminLogout);

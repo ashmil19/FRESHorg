@@ -1,3 +1,4 @@
+const bannerModel = require('../../models/bannerModel');
 const cartModel = require('../../models/cartModel');
 const categoryModel = require('../../models/categoryModel');
 const productModel = require('../../models/productModel');
@@ -22,6 +23,7 @@ const loadShop = async (req, res)=>{
         
     const user = await userModel.findOne({_id: id});
     const cart = await cartModel.findOne({userId: id});
+    const banners = await bannerModel.find();
 
     const products = await productModel.find({
         productName: {$regex: new RegExp(search, 'i')},
@@ -33,7 +35,7 @@ const loadShop = async (req, res)=>{
 
     const categories = await categoryModel.find();
 
-    res.render('user/shop',{categories, cart, products, user, id});
+    res.render('user/shop',{categories, cart, products, user, id, banners});
 }
 
 

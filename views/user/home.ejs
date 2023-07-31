@@ -129,14 +129,58 @@
                             </form>
                         </div>
                     </div>
-                    <div class="hero__item set-bg" data-setbg="/img/hero/banner.jpg">
+
+                    <div id="demo" class="carousel slide" data-ride="carousel">
+
+                        <!-- Indicators -->
+                        <!-- <ul class="carousel-indicators">
+                          <li data-target="#demo" data-slide-to="0" class="active"></li>
+                          <li data-target="#demo" data-slide-to="1"></li>
+                          <li data-target="#demo" data-slide-to="2"></li>
+                        </ul> -->
+                        
+                        <!-- The slideshow -->
+                        
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="hero__item set-bg" data-setbg="<%= banners[0].bannerImage.url %>">
+                                    <div class="hero__text">
+                                        <span class="text-light"><%= banners[0].title %></span>
+                                        <h2 class="text-light"><%= banners[0].title %> <br /><%= banners[0].description %></h2>
+                                        <!-- <p>Free Pickup and Delivery Available</p> -->
+                                        <a href="/category?catId=<%= banners[0].targetCategory._id %>" class="primary-btn">SHOP NOW</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% for(i=1;i<banners.length;i++){  %>
+                            <div class="carousel-item">
+                                <div class="hero__item set-bg" data-setbg="<%= banners[i].bannerImage.url %>">
+                                    <div class="hero__text">
+                                        <span class="text-light"><%= banners[i].title %></span>
+                                        <h2 class="text-light"><%= banners[i].title %> <br /><%= banners[i].description %></h2>
+                                        <!-- <p>Free Pickup and Delivery Available</p> -->
+                                        <a href="/category?catId=<%= banners[i].targetCategory._id %>" class="primary-btn">SHOP NOW</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                        
+                        <!-- Left and right controls -->
+                        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                          <span class="carousel-control-prev-icon"></span>
+                        </a>
+                        <a class="carousel-control-next" href="#demo" data-slide="next">
+                          <span class="carousel-control-next-icon"></span>
+                        </a>
+                      </div>
+                    <!-- <div class="hero__item set-bg" data-setbg="/img/hero/banner.jpg">
                         <div class="hero__text">
                             <span>FRUIT FRESH</span>
                             <h2>Vegetable <br />100% Organic</h2>
                             <p>Free Pickup and Delivery Available</p>
                             <a href="/shop" class="primary-btn">SHOP NOW</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
