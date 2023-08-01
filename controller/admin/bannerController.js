@@ -45,9 +45,46 @@ const addBanner = async (req, res)=>{
     }
 }
 
+const loadEditBanner = async (req, res)=>{
+    try {
+
+        const { bannerId } = req.query;
+
+        const banner = await bannerModel.findOne({_id: bannerId});
+
+        res.render("admin/editBanner",{banner});
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const editBanner = async (req, res)=>{
+    try {
+
+        const {
+            title,
+            description
+        } = req.body;
+
+        const { bannerId } = req.query;
+
+        await bannerModel.findByIdAndUpdate(bannerId,{
+            title: title,
+            description: description,
+        })
+
+        res.redirect('/admin/banner');
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     loadBanner,
     loadAddBanner,
     addBanner,
+    loadEditBanner,
+    editBanner,
 }

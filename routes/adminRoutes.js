@@ -45,9 +45,11 @@ router.get('/coupon/edit',adminAuth.isLogin,couponController.loadEditCoupon);
 router.post('/coupon/edit',couponController.editCoupon);
 router.post('/coupon/apply',couponController.applyCoupon);
 
-router.get('/banner',bannerController.loadBanner);
-router.get('/banner/add',bannerController.loadAddBanner);
+router.get('/banner',adminAuth.isLogin,bannerController.loadBanner);
+router.get('/banner/add',adminAuth.isLogin,bannerController.loadAddBanner);
 router.post('/banner/add',bannerController.addBanner);
+router.get('/banner/edit',adminAuth.isLogin,bannerController.loadEditBanner);
+router.post('/banner/edit',bannerController.editBanner);
 
 
 router.get('/logout',dashboardController.adminLogout);

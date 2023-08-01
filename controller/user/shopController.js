@@ -7,6 +7,7 @@ const userModel = require('../../models/userModel');
 
 const loadShop = async (req, res)=>{
     const id = req.session.user_id;
+    console.log(req.query);
 
     let search = '';
     if(req.query.search){
@@ -14,11 +15,11 @@ const loadShop = async (req, res)=>{
     }
 
     let minamount = 0;
-    let maxamount = 500;
+    let maxamount = 200;
     
     if(req.query.minamount || req.query.maxamount){
-        minamount = parseInt(req.query.minamount.slice(1));
-        maxamount = parseInt(req.query.maxamount.slice(1));
+        minamount = parseInt(req.query.minamount);
+        maxamount = parseInt(req.query.maxamount);
     }
         
     const user = await userModel.findOne({_id: id});
@@ -33,9 +34,11 @@ const loadShop = async (req, res)=>{
         ]
     });
 
+    
+
     const categories = await categoryModel.find();
 
-    res.render('user/shop',{categories, cart, products, user, id, banners});
+    res.render('user/shop',{categories, cart, products, user, id, banners, search, minamount, maxamount});
 }
 
 

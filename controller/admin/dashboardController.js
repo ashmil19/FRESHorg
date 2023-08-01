@@ -68,16 +68,16 @@ const loadDashboard = async(req, res)=>{
                     from: "orderitems",
                     localField: "items",
                     foreignField: "_id",
-                    as: "orderitem"
+                    as: "orderdata"
                 }
             },
             {
-                $unwind: "$orderitem"
+                $unwind: "$orderdata"
             },
             {
                 $lookup: {
                     from: "products",
-                    localField: "orderitem.product",
+                    localField: "orderdata.product",
                     foreignField: "_id",
                     as: "productdata",
                 }
@@ -104,6 +104,8 @@ const loadDashboard = async(req, res)=>{
             val.count = id.count;
             cat.push(val);
         }
+
+        console.log(cat);
 
         const orders = await orderModel.find()
                             .populate("user")
