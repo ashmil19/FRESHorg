@@ -7,6 +7,7 @@ const productModel = require("../../models/productModel");
 const couponModel = require("../../models/couponModel");
 
 const Razorpay = require('razorpay');
+const walletModel = require("../../models/walletModel");
 
 const loadCheckoutAddress = async (req, res)=>{
     const id = req.session.user_id;
@@ -17,7 +18,15 @@ const loadCheckoutAddress = async (req, res)=>{
     const mainAddress = await addressModel.findOne({user: id,type: "main"});
     const secondaryAddress = await addressModel.find({user: id,type: "secondary"});
 
-    res.render('user/checkoutAddress',{id, user: userData, contact: contactAddress, main: mainAddress, secondary: secondaryAddress, address});
+    res.render('user/checkoutAddress',{
+        id, 
+        user: userData, 
+        contact: contactAddress, 
+        main: mainAddress, 
+        secondary: secondaryAddress, 
+        address,
+    });
+
 }
 
 
@@ -72,10 +81,14 @@ const selectAddress = async (req, res)=>{
         const product = await cartModel
                                 .findOne({userId: userId})
                                 .populate("items.productId");
-
-        product.items.forEach((item)=>{
+        
+        // console.log(product);
+        // product.items.forEach((item)=>{
+        //     productList.push(item.productId)
+        // })
+        for(const item of product.items){
             productList.push(item.productId)
-        })
+        }
 
         res.render('user/checkout',{cart, productList, address, coupon: null});
 
@@ -151,6 +164,7 @@ const checkout = async (req, res)=>{
         payment_id,
     } = req.body;
 
+
     const cart = await cartModel.findOne({userId: userId});
 
     const orderItemIdList = Promise.all(cart.items.map(async (item)=>{
@@ -175,6 +189,49 @@ const checkout = async (req, res)=>{
         payment_status: false,
         payment_method: payment,
     });
+
+    if(payment == "wallet"){
+        const wallet = await walletModel.findOne({user: userId});
+
+        if(!wallet){
+            res.json({wallet: "false"});
+            return;
+        }
+
+        let cartTotalPrice = cart.cartPrice;
+
+        if(couponId){
+            const coupon = await couponModel.findOne({_id: couponId});
+            if(wallet.balance < (cartTotalPrice - coupon.discount)){
+                res.json({wallet: "noprice"})
+                return;
+            }
+
+            cartTotalPrice -= coupon.discount
+            
+        }else{
+
+            if(wallet.balance < cartTotalPrice){
+                res.json({wallet: "noprice"})
+                return;
+            }
+        }
+
+        let balance = wallet.balance;
+        const newBalance = balance - cartTotalPrice;
+        const history = {
+            type: "subtract",
+            amount: cartTotalPrice,
+            newBalance: newBalance
+        }
+
+        wallet.balance = newBalance;
+        wallet.history.push(history);
+        await wallet.save();
+        newOrder.payment_status = true;
+
+    }
+
     
     if(couponId){
 
@@ -182,28 +239,14 @@ const checkout = async (req, res)=>{
             
         if(payment_id){
 
-            newOrder = orderModel({
-                user: userId,
-                address: address,
-                items: items,
-                price: cart.cartPrice - coupon.discount,
-                payment_status: true,
-                payment_method: payment,
-                coupon: couponId,
-                razorpay_order_id: payment_id,
-            });
+            newOrder.price = cart.cartPrice - coupon.discount;
+            newOrder.payment_status = true;
+            newOrder.razorpay_order_id = payment_id;
+
 
         }else{
 
-            newOrder = orderModel({
-                user: userId,
-                address: address,
-                items: items,
-                price: cart.cartPrice - coupon.discount,
-                payment_status: false,
-                payment_method: payment,
-                coupon: couponId,
-            });
+            newOrder.price = cart.cartPrice - coupon.discount;
 
         }
 
@@ -211,22 +254,15 @@ const checkout = async (req, res)=>{
 
         if(payment_id){
 
-            newOrder = orderModel({
-                user: userId,
-                address: address,
-                items: items,
-                price: cart.cartPrice,
-                payment_status: true,
-                payment_method: payment,
-                razorpay_order_id: payment_id,
-            });
+            newOrder.payment_status = true;
+            newOrder.razorpay_order_id = payment_id;
 
         }
 
     }
 
 
-    await newOrder.save()
+    const saveOrder = await newOrder.save()
 
 
     cart.items.forEach( async (item)=>{
@@ -238,7 +274,7 @@ const checkout = async (req, res)=>{
 
     await cartModel.deleteOne({userId: userId});
 
-    res.json({response: true, orderId: newOrder._id});
+    res.json({response: true, orderId: saveOrder._id});
 
 }
 

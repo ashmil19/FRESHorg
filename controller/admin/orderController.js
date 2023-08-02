@@ -5,8 +5,9 @@ const couponModel = require("../../models/couponModel");
 
 const loadorder = async (req, res)=>{
     
-    const orders = await orderModel.find();
-    const users = await orderModel.find().populate("user");
+    const orders = await orderModel.find().sort({order_date: -1});
+    const users = await orderModel.find().populate("user").sort({order_date: -1});
+
 
     res.render('admin/order',{orders,users});
 }
@@ -18,6 +19,8 @@ const loadOrderDetails = async (req, res)=>{
         userId,
         orderId,
     } = req.query;
+
+    // console.log(orderId);
     
     const user = await userModel.findOne({_id: userId});
     const order = await orderModel.findOne({_id: orderId});
@@ -31,7 +34,7 @@ const loadOrderDetails = async (req, res)=>{
         products.push(product)
     }
     
-    console.log(products);
+    console.log(order);
 
     res.render('admin/orderDetails',{user, order, coupon, address: cartAddress.address, products});
 }
@@ -43,8 +46,11 @@ const statusChange = async (req, res)=>{
         status
     } = req.body;
 
-    if(status !== "None"){
-        await orderModel.findByIdAndUpdate(id,{order_status: status});
+    if(status === "delivered"){
+        await orderModel.findByIdAndUpdate(id,{order_status: status, payment_status: true});
+
+    }else{
+        await orderModel.findByIdAndUpdate(id,{order_status: status});        
     }
 
     const order = await orderModel.findOne({_id: id});

@@ -44,12 +44,13 @@
                                                             <%}%>" id="orderStatus"><small>
                                                                     <%=order.order_status%>
                                                                 </small></a>
-                                        <%if(order.order_status=="pending"){%>
+                                        <%if(order.order_status != "rejected" && order.order_status != "cancelled" && order.order_status != "delivered"){%>
                                             <br>
                                             <select class="form-select col-8 mt-2" id="status-select">
-                                                <option selected>None</option>
-                                                <option value="shipped">Shipped</option>
-                                                <option value="rejected">Reject</option>
+                                                <option <% if(order.order_status === "pending") { %> selected <% } %> value="pending"> Pending</option>
+                                                <option <% if(order.order_status === "rejected") { %> selected <% } %> value="rejected"> Reject</option>
+                                                <option <% if(order.order_status === "shipped") { %> selected <% } %> value="shipped"> Shipped</option>
+                                                <option <% if(order.order_status === "delivered") { %> selected <% } %> value="delivered"> Delivered</option>
                                             </select>
                                             <%}%>
                                     </div>
@@ -140,6 +141,7 @@
                         <div class="card-body">
                             <% if(order.payment_method == "cod"){ %> Cash On Delivery <% } %>
                             <% if(order.payment_method == "online"){ %> Online Payment <% } %>
+                            <% if(order.payment_method == "wallet"){ %> Wallet Payment <% } %>
                         </div>
                       </div>
                   </div>

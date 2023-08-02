@@ -1,4 +1,6 @@
 const userModel = require('../../models/userModel');
+const cartModel = require('../../models/cartModel');
+
 const bcrypt = require('bcrypt');
 const hash = require('../../utils/toHash')
 
@@ -6,7 +8,8 @@ const hash = require('../../utils/toHash')
 const loadProfile = async (req, res)=>{
     const id = req.session.user_id;
     const userData = await userModel.findOne({_id: id});
-    res.render("user/profile",{id, user: userData});
+    const cart = await cartModel.findOne({userId: id});
+    res.render("user/profile",{id, user: userData, cart});
 }
 
 const loadEditUser = async (req, res)=>{

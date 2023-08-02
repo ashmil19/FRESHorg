@@ -1,5 +1,6 @@
 const userModel = require('../../models/userModel');
 const addressModel = require('../../models/addressModel');
+const cartModel = require('../../models/cartModel');
 
 const loadAddress = async (req, res)=>{
     const id = req.session.user_id;
@@ -7,8 +8,9 @@ const loadAddress = async (req, res)=>{
     const contactAddress = await addressModel.findOne({user: id,type: "contact"});
     const mainAddress = await addressModel.findOne({user: id,type: "main"});
     const secondaryAddress = await addressModel.find({user: id,type: "secondary"});
-    console.log(contactAddress);
-    res.render("user/address",{id, user: userData, contact: contactAddress,main: mainAddress, secondary: secondaryAddress});
+    const cart = await cartModel.findOne({userId: id});
+
+    res.render("user/address",{id, user: userData, contact: contactAddress,main: mainAddress, secondary: secondaryAddress, cart});
 }
 
 const loadAddAddress = (req, res)=>{

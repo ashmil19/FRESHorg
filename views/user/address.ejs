@@ -75,7 +75,7 @@
 
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>
                             </ul>
 
                             <div class="header__top__right__auth">
@@ -141,6 +141,9 @@
                             <div
                                 style="border: .05rem solid rgb(174, 171, 171);background-color: #7FAD39;min-height: 2rem">
                                 <a href="/address" class="nav-link text-light">Address</a></div>
+                            <div style="border: .05rem solid rgb(174, 171, 171);min-height: 2rem">
+                                <a href="/wallet" class="nav-link text-dark">Wallet</a>
+                            </div>
                         </div>
                     </div>
 

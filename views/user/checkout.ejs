@@ -2,12 +2,12 @@
 
 
 
-<section class="checkout spad">
+<section class="checkout spad" >
     <div class="container">
         <div class="checkout__form">
             <h4>Billing Details</h4>
             <div>
-                <div class="row">
+                <div class="row" id="payradio">
                     <div class="col-lg-8 col-md-6">
 
                         
@@ -47,7 +47,7 @@
 
                     
                     
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6" >
                         <form class="mb-30" id="couponForm">
                             <div class="input-group">
                                 <input type="text" id="couponName" pattern="^(?!.*\s)[^\s]+(?<!\s)$" class="form-control border-0 form-control-sm text-dark font-weight-bold" style="box-shadow: none;background-color: #f5f5f5;" placeholder="Coupon Code" required>
@@ -56,20 +56,20 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="checkout__order mt-3">
+                        <div class="checkout__order mt-3" >
                             <h4>Your Order</h4>
                             <div class="checkout__order__products">Products <span>Total</span></div>
                             <ul>
                                 <% for(let i=0;i<cart.items.length;i++){ %>
-                                    <li><%= productList[i].productName %> <span>$<%= cart.items[i].totalPrice.toFixed(2) %></span></li>
+                                    <li><%= productList[i].productName %> <span>&#8377;<%= cart.items[i].totalPrice.toFixed(2) %></span></li>
                                 <% } %>
                             </ul>
-                            <div class="checkout__order__subtotal">Subtotal <span>$<%= cart.cartPrice.toFixed(2) %></span></div>
+                            <div class="checkout__order__subtotal">Subtotal <span>&#8377;<%= cart.cartPrice.toFixed(2) %></span></div>
                           
-                            <div class="checkout__order__total">Coupon <span class="text-dark couponShow">$0</span></div>
-                            <div class="checkout__order__total">Total <span id="totalprice">$<%= cart.cartPrice.toFixed(2) %></span></div>
+                            <div class="checkout__order__total">Coupon <span class="text-dark couponShow">&#8377;0</span></div>
+                            <div class="checkout__order__total">Total <span id="totalprice">&#8377;<%= cart.cartPrice.toFixed(2) %></span></div>
                             
-                            <div class="bg-light p-30 " style="background-color: #f5f5f5 !important;">
+                            <div class="bg-light p-30 " style="background-color: #f5f5f5 !important;" >
                                 <div class="form-group paymentx">
                                     <div class="custom-control custom-radio">
                                         <input type="radio" class="custom-control-input" value="cod" name="payment" id="cod">
@@ -84,11 +84,11 @@
                                 </div>
                                 <div class="form-group mb-4 paymentx">
                                     <div class="custom-control custom-radio">
-                                        <input type="radio" class="custom-control-input" value="wallet" name="payment" id="wallet" disabled>
+                                        <input type="radio" class="custom-control-input" value="wallet" name="payment" id="wallet">
                                         <label class="custom-control-label" for="banktransfer">Wallet Payment</label>
                                     </div>
                                 </div>
-                            </div>
+                            </div>
                             
                             <button id="address-btn" style="display: none;" type="button" onclick="placeorder()" class="site-btn rounded">PLACE ORDER</button>
                         </div>
@@ -175,9 +175,9 @@
                     icon: "warning",
                     title: "Invalid coupon",
                     })
-                    document.querySelector('.couponShow').innerHTML= `$${0}`;
+                    document.querySelector('.couponShow').innerHTML= `&#8377;${0}`;
                     document.querySelector('.couponShow').removeAttribute("id");
-                    document.getElementById('totalprice').innerHTML= `$${'<%= cart.cartPrice.toFixed(2) %>'}`;
+                    document.getElementById('totalprice').innerHTML= `&#8377;${'<%= cart.cartPrice.toFixed(2) %>'}`;
                 }else if(result.data.response == "min"){
 
                     Swal.fire({
@@ -187,9 +187,9 @@
 
                 }else{
                     
-                    document.querySelector('.couponShow').innerHTML= `$${result.data.coupon.discount}`;
+                    document.querySelector('.couponShow').innerHTML= `&#8377;${result.data.coupon.discount}`;
                     document.querySelector('.couponShow').setAttribute("id",result.data.coupon._id);
-                    document.getElementById('totalprice').innerHTML= `$${('<%= cart.cartPrice %>'- result.data.coupon.discount).toFixed(2)}`;
+                    document.getElementById('totalprice').innerHTML= `&#8377;${('<%= cart.cartPrice %>'- result.data.coupon.discount).toFixed(2)}`;
                 }
             })
         })
@@ -276,9 +276,21 @@
                     }
                 })
                 .then((result)=>{
+
                     if(result.data.response){
                         location.href=`/order/success?orderId=${result.data.orderId}`;
+                        return;
                     }
+
+                    if(result.data.wallet == "false" || result.data.wallet == "noprice"){
+                        Swal.fire({
+                            icon: "warning",
+                            title: "you dont have enough balance",
+                        })
+
+                    }
+
+                    
                 })                
             }
 

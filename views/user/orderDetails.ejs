@@ -114,7 +114,7 @@
 
                             <ul>
                                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li> 
+                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>
                             </ul>
 
                             <div class="header__top__right__auth">
@@ -146,17 +146,17 @@
             <h4 class="mb-0">#Order Details</h4>
             <p class="mb-0"><%= order._id %></p>
         </div>
-        <div class="card-body ">
+        <div class="card-body " id="order-track">
 
             <section>
 
                 <div class="container py-5 h-100">
                     <div class="row d-flex justify-content-center align-items-center h-100">
                       <div class="col">
-                        <div class="card card-stepper" style="border-radius: 10px;">
+                        <div class="card card-stepper" style="border-radius: 10px;" >
                           <div class="card-body p-4">
                             
-                            <% if(order.order_status !== "cancelled"){ %>
+                            <% if(order.order_status !== "cancelled" && order.order_status !== "rejected"){ %>
                             <div class="d-flex justify-content-between align-items-center">
                               <div class="d-flex flex-column">
                                 <span class="lead fw-normal">Track Your Order</span>
@@ -172,10 +172,21 @@
                 
                             <div class="d-flex flex-row justify-content-between align-items-center align-content-center">
                               <span class="dot"></span>
-                              <hr <% if(order.order_status == "shipped") {%> class="flex-fill track-line" <%}else{%> class="flex-fill" <% } %> ><span class="dot"></span>
-                              <hr <% if(order.order_status == "delivered") {%> class="flex-fill track-line" <%}else{%> class="flex-fill" <% } %>><span
+                              <% if(order.order_status == "shipped") {%>
+                              <hr class="flex-fill track-line" ><span class="dot"></span>
+                              <hr  class="flex-fill" ><span
                                 class="d-flex justify-content-center align-items-center big-dot dot">
                                 <i class="fa fa-check text-white"></i></span>
+                              
+
+                              <%} else if(order.order_status == "delivered") {%>
+                                <hr class="flex-fill track-line" ><span class="dot"></span>
+                                <hr  class="flex-fill track-line" ><span
+                                  class="d-flex justify-content-center align-items-center big-dot dot">
+                                  <i class="fa fa-check text-white"></i></span>
+                                <% } %>
+
+                              
                             </div>
                 
                             <div class="d-flex flex-row justify-content-between align-items-center">
@@ -188,7 +199,7 @@
                             </div>
                             <% }else{ %>
                                 <div>
-                                    <div class="d-flex justify-content-center h3 text-danger font-weight-bold text-uppercase">Order Cancelled</div>
+                                    <div class="d-flex justify-content-center h3 text-danger font-weight-bold text-uppercase">Order <%= order.order_status  %></div>
                                 </div>
                             <% } %>
                 
@@ -285,8 +296,22 @@
                 </div>
                 <div class="card-body">
                     <% if(order.payment_method == "cod"){ %> Cash On Delivery <% } %>
+                    <% if(order.payment_method == "online"){ %> Online Payment <% } %>
+                    <% if(order.payment_method == "wallet"){ %> Wallet Payment <% } %>
                 </div>
               </div>
+
+
+              <% if(Date.now() < new Date(new Date(order.order_date).getTime() + 2 * 24 * 60 * 60 * 1000) && order.order_status == "delivered"){  %>
+              <div class="card m-3">
+                <div class="card-header">
+                    Return Your Order
+                </div>
+                <div class="card-body">
+                    <button type="button" onclick="returnOrder()" class="btn btn-sm btn-dark">Return</button>
+                </div>
+              </div>
+              <% } %>
           </div>
         </div>
         </div>
@@ -296,13 +321,81 @@
      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 
      <!-- sweet alert cdn -->
-     <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
      <script>
         function login(){
             const currentUrl = location.href;
             location.href= `/login?url=${currentUrl}`
         }
+
+        function returnOrder(){
+        //     Swal.fire({
+        //   title: 'Please Mention your issue',
+        // //   scrollbarPadding: false,
+        //   html: `<div class="d-flex flex-column align-items-start"><h5><input type="checkbox" id="damage"  />The Product is Damaged </h5>
+        //         <h5><input type="checkbox" id="wrong-item"  />Wrong Item Delivered </h5></div>`,
+        //   confirmButtonText: 'confirm',
+        //   preConfirm: () => {
+        //     var damage = Swal.getPopup().querySelector('#damage').checked
+        //     var wrong = Swal.getPopup().querySelector('#wrong-item').checked
+        //     console.log("Alcool = " + damage + " Cigarro = "+ wrong)
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/order/return",
+        //         data: {
+        //             damage,
+        //             wrong,
+        //         }
+        //     })
+
+            
+            
+        //   }
+        // }).then((result) => {
+        //   Swal.fire("alcool: "+`${result.value.damage}`+" and Cigarro: "+`${result.value.wrong}`);
+        // })
+
+
+        Swal.fire({
+            icon: "warning",
+            title: "Are you sure?",
+            text: "Return Order?",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Confirm",
+          }).then((result) => {
+            if (result.isConfirmed) {
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/order/return",
+                    data: {
+                        orderId: '<%= order._id %>'
+                    },
+                    success: function(res){
+                        if(res.success){
+                            Swal.fire("Order Return!", "Order will be returned.", "success").then((response) => {
+                                $.get(location.href, function(data) {
+                                    $("#order-track").html($(data).find("#order-track").html());
+                                    // $("#order-return").html($(data).find("#order-return").html());
+                                });
+                            })
+                        }
+                    }
+                    
+                })
+              
+            }
+          });
+
+
+        
+        }
+
+        
      </script>
 
     

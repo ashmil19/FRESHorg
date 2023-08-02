@@ -10,6 +10,7 @@ const cartController = require('../controller/user/cartController');
 const checkoutController = require('../controller/user/checkoutController');
 const orderController = require('../controller/user/orderController');
 const categoryController = require('../controller/user/catergoryController');
+const walletController = require('../controller/user/walletController');
 
 const adminAuth = require('../middleware/admin');
 const userAuth = require('../middleware/user');
@@ -62,7 +63,10 @@ router.post('/checkout',checkoutController.checkout);
 router.get('/order',userAuth.isLogin,orderController.loadorder);
 router.get('/order/details',userAuth.isLogin,orderController.loadOrderDetails);
 router.post('/order/cancel',orderController.cancelOrder);
-router.get('/order/success',userAuth.isLogin,orderController.loadOrderSuccessPage)
+router.get('/order/success',userAuth.isLogin,orderController.loadOrderSuccessPage);
+router.post('/order/return',orderController.orderReturn);
+
+router.get('/wallet',userAuth.isLogin,walletController.loadWallet);
 
 router.get('/logout',homeController.userLogout);
 
