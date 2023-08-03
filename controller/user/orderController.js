@@ -116,9 +116,6 @@ const cancelOrder = async (req, res)=>{
     }
     
 
-
-
-
 }
 
 const loadOrderSuccessPage = async (req, res)=>{

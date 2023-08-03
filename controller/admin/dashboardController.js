@@ -123,6 +123,18 @@ const loadDashboard = async(req, res)=>{
     }
 }
 
+
+const loadSalesReport = (req, res)=>{
+    try {
+
+        res.render('admin/sale');
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 const adminLogout = (req, res)=>{
     try {
 
@@ -137,4 +149,5 @@ const adminLogout = (req, res)=>{
 module.exports = {
     loadDashboard,
     adminLogout,
+    loadSalesReport,
 }

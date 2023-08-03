@@ -1,0 +1,250 @@
+<%- include('./partials/header.ejs') %>
+
+    <!-- Page Preloder -->
+    <!-- <div id="preloder">
+        <div class="loader"></div>
+    </div> -->
+
+
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="#"><img src="/img/logo.png" alt=""></a>
+        </div>
+        <div class="humberger__menu__cart">
+            <ul>
+                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+            </ul>
+            <div class="header__top__right__auth">
+                <a class="navbar-brand text-dark fs-4 fw-bold" href="#">FRESH<span class="text-danger">org</span></a>
+            </div>
+            
+        </div>
+        
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Shop</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+
+    </div>
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+     <header class="header">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a class="navbar-brand text-dark fs-4 fw-bold" href="#">FRESH<span class="text-danger">org</span></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+ 
+                        <div class="header__top__right__auth">
+
+                            <% if(!id) {%>
+                            
+                            
+
+							<div class="header__top__right__auth">
+                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                            </div>
+
+                            <% } else {%>
+                            
+
+                            <ul>
+                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li id="cart"><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li> 
+                            </ul>
+
+                            <div class="header__top__right__auth">
+                                <a href="/profile"><i class="fa fa-user"></i><%= user.username %></a>
+                            </div>
+
+							<div class="header__top__right__auth">
+                                <a href="/logout" style="box-shadow: none;border: none;" class="btn btn-sm btn-outline-danger">Logout</a>
+                            </div>
+                            
+                            <% } %>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <div class="container-fluid mt-5">
+        <div class="row px-xl-5" id="row">
+            <% if(wishlist){ %>
+            <% if(wishlist.items.length > 0) {%>
+            <div class="col-lg-12 table-responsive mb-5">
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>sl</th>
+                      <th scope="col" colspan="2">Product</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Add To Cart</th>
+                      <th scope="col">Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <% for(let i=0;i<wishlist.items.length;i++) { %>
+                    <tr id="<%= wishlist.items[i]._id %>">
+                      <td><%= i+1 %></td>
+                      <td scope="row"><%= wishlist.items[i].productName %></td>
+                      <td><img style="width: 2.5rem;height: 2rem;" src="<%= wishlist.items[i].image[0].url %>" alt=""></td>
+                      <td class="align-middle">&#8377;<%= wishlist.items[i].price %></td>
+                      <td><button class="btn btn-success" onclick="addToClick('<%=wishlist.items[i]._id%>')" >Add To Cart</button></td>
+
+                      <td class="align-middle"><button onclick="removeItem('<%= wishlist.items[i]._id %>')" style="box-shadow: none;" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
+                    </tr>
+                    <% } %>
+
+                  </tbody>
+                </table>
+
+            </div>
+
+            <% }else{ %>
+                <div class="col-12 mb-4 mt-4">
+                    <p class="h1 text-center text-danger">Wishlist is empty</p>
+                </div>
+            <% } %>
+            <% }else{ %>
+                <div class="col-12 mb-4 mt-4">
+                    <p class="h1 text-center text-danger">Wishlist is empty</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <!-- Cart End -->
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- axios cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        function decrementQuantity(productId, userId){
+            
+            $.ajax({
+                type: "GET",
+                url: "/decrementQuantity",
+                data: {
+                    userId: userId,
+                    productId: productId,
+                },
+                success: function(res){
+                    if(res.response){
+                        
+                        $.get(location.href, function(data) {
+                            $(`#${productId}`).html($(data).find(`#${productId}`).html());
+                            $("#carttotal").html($(data).find("#carttotal").html());
+                            $("#subtotal").html($(data).find("#subtotal").html());
+                        });
+                    }
+                }
+            })
+        }
+
+        function incrementQuantity(productId, userId){
+            
+            $.ajax({
+                type: "GET",
+                url: "/incrementQuantity",
+                data: {
+                    userId: userId,
+                    productId: productId,
+                },
+                success: function(res){
+                    if(res.response){
+                        
+                        $.get(location.href, function(data) {
+                            $(`#${productId}`).html($(data).find(`#${productId}`).html());
+                            $("#carttotal").html($(data).find("#carttotal").html());
+                            $("#subtotal").html($(data).find("#subtotal").html());
+                        });
+                    }
+                }
+            })
+
+        }
+
+        function removeItem(productId){
+
+            $.ajax({
+                type: "GET",
+                url: "/addToWishlist",
+                data: {
+                    productId: productId,
+                },
+                success: function(res){
+                        
+                    $.get(location.href, function(data) {
+                        $("#row").html($(data).find("#row").html());
+                        $("#wishlist").html($(data).find("#wishlist").html());
+                        $("#cart").html($(data).find("#cart").html());
+                    });
+                    
+                }
+            })
+        }
+
+        function addToClick(id){
+            
+            axios.get(`/addToCart?productId=${id}`)
+            .then((result)=>{
+                if(result.data.response){
+                    Swal.fire("Added!", "product has added to cart.", "success").then((response) => {
+                        removeItem(id)
+                    })
+
+                    
+                }else{
+                    let x = document.getElementById("snackbar-error");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+                }
+                
+            })
+                
+        }
+
+
+    </script>
+    
+
+    <%- include('./partials/footer.ejs') %>

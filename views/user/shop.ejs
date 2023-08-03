@@ -200,7 +200,7 @@
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg="<%= product.image[0].url %>">
                                     <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                        <!-- <li><a href="#"><i class="fa fa-heart"></i></a></li> -->
                                         <li><a href="/shopDetails?id=<%= product._id %>"><i class="fa fa-info"></i></a></li>
                                         <!-- <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li> -->
                                     </ul>
@@ -275,6 +275,7 @@
             var keycode = event.keyCode || event.which;
             if (keycode === 13) {
                 event.preventDefault();
+                advanceSearch();
             }
         });
 

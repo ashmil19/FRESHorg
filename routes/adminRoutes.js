@@ -13,6 +13,8 @@ const adminAuth = require('../middleware/admin');
 
 router.get('/dashboard',adminAuth.isLogin,dashboardController.loadDashboard);
 
+router.get('/sale',dashboardController.loadSalesReport);
+
 router.get('/category',adminAuth.isLogin,categoryController.loadCategory)
 router.get('/category/add',adminAuth.isLogin,categoryController.loadAddCategory);
 router.post('/category/add',categoryController.addCategory);

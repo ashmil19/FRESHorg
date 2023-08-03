@@ -11,6 +11,7 @@ const checkoutController = require('../controller/user/checkoutController');
 const orderController = require('../controller/user/orderController');
 const categoryController = require('../controller/user/catergoryController');
 const walletController = require('../controller/user/walletController');
+const wishlistController = require('../controller/user/wishlistController');
 
 const adminAuth = require('../middleware/admin');
 const userAuth = require('../middleware/user');
@@ -67,6 +68,9 @@ router.get('/order/success',userAuth.isLogin,orderController.loadOrderSuccessPag
 router.post('/order/return',orderController.orderReturn);
 
 router.get('/wallet',userAuth.isLogin,walletController.loadWallet);
+
+router.get('/wishlist',wishlistController.loadWishlist);
+router.get('/addToWishlist',wishlistController.addToWishlist);
 
 router.get('/logout',homeController.userLogout);
 

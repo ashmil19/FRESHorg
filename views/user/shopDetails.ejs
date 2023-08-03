@@ -86,7 +86,7 @@
                             
 
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li id="wishlist"><a href="/wishlist"><i class="fa fa-heart"></i> <span><% if(wishlist){ %><%= wishlist.items.length %><% }else{ %>0<% } %></span></a></li>
                                 <li id="cart"><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>  
                             </ul>
 
@@ -207,8 +207,8 @@
                             
                             <div class="mb-2">
                                 <% if(product.quantity !== 0){ %>
-                                <button  style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light"oncli <% if(userId) {%> onclick="addToClick('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  >ADD TO CART</button>
-                                <button href="#" style="border: none;" class="heart-icon" <% if(!userId) {%> disabled <% } %>  ><span class="icon_heart"></span></button>
+                                <button  style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light" <% if(userId) {%> onclick="addToClick('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  >ADD TO CART</button>
+                                <button id="wishlist-icon"  style="border: none;" class="heart-icon rounded" <% if(userId) {%> onclick="addToWishlist('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  ><span class="icon_heart h5 <% if(userId &&wishlist.items.includes(product._id) ){ %>text-danger <% } %>"></span></button>
                                 <% }else{ %>
                                     <kbd class="bg-danger text-dark"><b>No Stock Available</b></kbd>
                                     <div class="mt-2"><b>Please try after some time!</b></div>
@@ -341,7 +341,6 @@
             console.log("hai",id);
             axios.get(`/addToCart?productId=${id}`)
             .then((result)=>{
-                console.log(result);
                 if(result.data.response){
                     let x = document.getElementById("snackbar");
                     x.className = "show";
@@ -357,6 +356,24 @@
                 
             })
                 
+        }
+
+        function addToWishlist(id){
+            console.log(id);
+
+            $.ajax({
+                type: "GET",
+                url: "/addToWishlist",
+                data: {
+                    productId: id,
+                },
+                success: function(res){
+                    $.get(location.href, function(data){
+                        $("#wishlist").html($(data).find("#wishlist").html());
+                        $("#wishlist-icon").html($(data).find("#wishlist-icon").html());
+                    })
+                }
+            })
         }
 
         function notLogin(){
