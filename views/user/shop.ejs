@@ -290,7 +290,18 @@
             const minamount = $("#minamount").val();
             const maxamount = $("#maxamount").val();
 
-            location.href = `/shop?search=${search}&minamount=${minamount}&maxamount=${maxamount}`;
+
+            if(location.pathname == "/category"){
+
+                const query = new URLSearchParams(location.search);
+                const catId = query.get('catId') 
+                location.href = `/category?catId=${catId}&search=${search}&minamount=${minamount}&maxamount=${maxamount}`
+
+            }else{
+
+                location.href = `/shop?search=${search}&minamount=${minamount}&maxamount=${maxamount}`;
+            }
+
         }
 
         function loadCategory(categroyId){

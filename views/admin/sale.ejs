@@ -5,7 +5,7 @@
         <div class="card card-white">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                        <a href="/admin/report" class="btn btn-tranparent">
+                        <a href="/admin/sale" class="btn btn-tranparent">
                             <h4 class="mb-0 text-blue">Yearly Report</h4>
                         </a>
                     <i class="fas fa-chart-pie text-orange fs-2"></i>
@@ -58,6 +58,25 @@
             <th>Profit</th>
         </tr>
     </thead>
+    <tbody id="tableVa">
+        <% for (let report of yearly) { %>
+            <tr>
+                <td><a href="#">
+                        <%=report._id.year%>
+                    </a></td>
+                <td>
+                    <%=report.count%>
+                </td>
+                <td>
+                    <%=report.items%>
+                </td>
+                <td>&#x20B9;<%=report.total%>.00</td>
+                <td>&#x20B9;<%=(report.total*30) /100%>
+                </td>
+                <!-- <td>$400</td> -->
+                <%}%>
+            </tr>
+    </tbody>
     
 </table>
 
@@ -89,23 +108,22 @@
     function month() {
         axios({
             method: "post",
-            url: "/admin/report/month",
+            url: "/admin/sale/monthly",
         })
             .then((result) => {
                 if (result.data.error) {
                     console.log("oops");
                 } else {
                     let html = "";
-                    let saleReport = result.data.salesRep;
+                    let saleReport = result.data.monthlySales;
                     saleReport.forEach((element) => {
                         html += `<tr>
-                                                                            <td><a href="#">${element._id.month
-                            }</a></td>
-                                                                            <td>${element.count}</td>
-                                                                            <td>${element.items}</td>
-                                                                            <td>&#x20B9;${element.total}.00</td>
-                                                                            <td>&#x20B9;${(element.total * 15) / 100}</td>
-                                                                        </tr>`;
+                            <td><a href="#">${element._id.month}</a></td>
+                            <td>${element.count}</td>
+                            <td>${element.items}</td>
+                            <td>&#x20B9;${element.total}.00</td>
+                            <td>&#x20B9;${(element.total * 15) / 100}</td>
+                        </tr>`;
                     });
                     table.clear().rows.add($(html)).draw();
                 //     $(document).ready(function () {
@@ -123,23 +141,22 @@
     function dailysale() {
         axios({
             method: "post",
-            url: "/admin/report/daily",
+            url: "/admin/sale/daily",
         })
             .then((result) => {
                 if (result.data.error) {
                     console.log("oops");
                 } else {
                     let html = "";
-                    let saleReport = result.data.daily;
+                    let saleReport = result.data.dailySales;
                     saleReport.forEach((element) => {
                         html += `<tr>
-                                                                            <td><a href="#">${element._id.Day}/${element._id.Month
-                            }/${element._id.Year}</a></td>
-                                                                            <td>${element.count}</td>
-                                                                            <td>${element.items}</td>
-                                                                            <td>&#x20B9;${element.Total}.00</td>
-                                                                            <td>&#x20B9;${(element.Total * 15) / 100}</td>
-                                                                        </tr>`;
+                            <td><a href="#">${element._id.Day}/${element._id.Month}/${element._id.Year}</a></td>
+                            <td>${element.count}</td>
+                            <td>${element.items}</td>
+                            <td>&#x20B9;${element.total}.00</td>
+                            <td>&#x20B9;${(element.total * 15) / 100}</td>
+                        </tr>`;
                     });
                     table.clear().rows.add($(html)).draw();
                 //     $(document).ready(function () {

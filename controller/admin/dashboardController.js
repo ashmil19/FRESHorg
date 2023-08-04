@@ -123,11 +123,135 @@ const loadDashboard = async(req, res)=>{
     }
 }
 
-
-const loadSalesReport = (req, res)=>{
+//yearly
+const loadSalesReport = async (req, res)=>{
     try {
 
-        res.render('admin/sale');
+        const yearly = await orderModel.aggregate([
+            {
+                $match: { order_status: {$eq: "delivered"}}
+            },
+            {
+                $lookup: {
+                    from: "orderitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "orderdata"
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        year: {$year: "$order_date"},
+                    },
+                    items: {$sum: {$sum: "$orderdata.quantity"}},
+                    count: {$sum: 1},
+                    total: {$sum: "$price"}
+                }
+            }
+            
+        ]);
+
+        res.render('admin/sale',{yearly});
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+//monthly
+const monthlySaleReport = async (req, res)=>{
+    try {
+
+        const sales = await orderModel.aggregate([
+            {
+                $match: { order_status: {$eq: "delivered"}}
+            },
+            {
+                $lookup: {
+                    from: "orderitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "orderdata"
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        month: {$month: "$order_date"},
+                    },
+                    items: {$sum: {$sum: "$orderdata.quantity"}},
+                    count: {$sum: 1},
+                    total: {$sum: "$price"}
+                }
+            },
+            {$sort: {"_id.month": 1}},
+            
+        ]);
+
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ];
+
+        const monthlySales = sales.map((sale)=>{
+            let oneSale = {...sale};
+            oneSale._id.month = months[oneSale._id.month - 1]
+            return oneSale;
+        })
+        
+        console.log(monthlySales);
+        res.json({ monthlySales, error: false })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const dailySalesReport = async (req, res)=>{
+    try {
+
+        const dailySales = await orderModel.aggregate([
+            {
+                $match: { order_status: {$eq: "delivered"}}
+            },
+            {
+                $lookup: {
+                    from: "orderitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "orderdata"
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        Year: {$year: "$order_date"},
+                        Month: {$month: "$order_date"},
+                        Day: {$dayOfMonth: "$order_date"}
+                    },
+                    items: {$sum: {$sum: "$orderdata.quantity"}},
+                    count: {$sum: 1},
+                    total: {$sum: "$price"}
+                }
+            },
+            {
+                $sort: {"_id.Year": -1,"_id.Month": 1,"_id.Day": 1}
+            },
+            
+        ]);
+
+        res.json({dailySales, error: false})
         
     } catch (error) {
         console.log(error);
@@ -150,4 +274,6 @@ module.exports = {
     loadDashboard,
     adminLogout,
     loadSalesReport,
+    monthlySaleReport,
+    dailySalesReport,
 }
