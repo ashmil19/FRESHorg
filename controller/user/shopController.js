@@ -3,6 +3,7 @@ const cartModel = require('../../models/cartModel');
 const categoryModel = require('../../models/categoryModel');
 const productModel = require('../../models/productModel');
 const userModel = require('../../models/userModel');
+const wishlistModel = require('../../models/wishlistModel');
 
 
 const loadShop = async (req, res)=>{
@@ -25,8 +26,10 @@ const loadShop = async (req, res)=>{
     const user = await userModel.findOne({_id: id});
     const cart = await cartModel.findOne({userId: id});
     const banners = await bannerModel.find();
+    const wishlist = await wishlistModel.findOne({userId: id});
 
     const products = await productModel.find({
+        isActive: true,
         productName: {$regex: new RegExp(search, 'i')},
         $and: [
             {price: {$gt: minamount}},
@@ -38,7 +41,7 @@ const loadShop = async (req, res)=>{
 
     const categories = await categoryModel.find();
 
-    res.render('user/shop',{categories, cart, products, user, id, banners, search, minamount, maxamount});
+    res.render('user/shop',{categories, cart, products, user, id, banners, search, minamount, maxamount, wishlist});
 }
 
 

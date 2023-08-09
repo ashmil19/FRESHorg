@@ -74,7 +74,7 @@
                             
 
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li id="wishlist"><a href="/wishlist"><i class="fa fa-heart"></i> <span><% if(wishlist){ %><%= wishlist.items.length %><% }else{ %>0<% } %></span></a></li>
                                 <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>
                             </ul>
 

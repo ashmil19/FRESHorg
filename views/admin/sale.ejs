@@ -1,6 +1,32 @@
 <%- include('./partials/header.ejs') %>
 
-<div class="row">
+<style>
+    .dataTables_wrapper{
+        padding: 3rem;
+    }
+    .dataTables_wrapper .dt-buttons button{
+        background-color: #7FAD39;
+        border-radius: 5px;
+        border: none;
+        padding: .50rem .80rem;
+        font-weight: 500;
+    }
+
+    .dataTables_wrapper .dataTables_filter {   
+        margin: 1rem 0;
+    }
+
+    .dataTables_wrapper .dataTables_filter input{
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate{
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<div class="row container-fluid mt-4">
     <div class="col-4 half-gutter grid-margin mb-4">
         <div class="card card-white">
             <div class="card-body">
@@ -47,6 +73,7 @@
         </div>
     </div>
 </div>
+
 <table id="dtBasicExample" class="table bg-white table-bordered" cellspacing="0" width="100%">
     <thead class="bg-light">
         <tr>
@@ -79,6 +106,8 @@
     </tbody>
     
 </table>
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>

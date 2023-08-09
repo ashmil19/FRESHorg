@@ -74,7 +74,7 @@
                             
 
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li id="wishlist"><a href="/wishlist"><i class="fa fa-heart"></i> <span><% if(wishlist){ %><%= wishlist.items.length %><% }else{ %>0<% } %></span></a></li>
                                 <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li> 
                             </ul>
 
@@ -124,7 +124,7 @@
                     <div class="hero__search">
                         <div class="hero__search__form">
                             <form>
-                                <input type="text" id="search" name="search" placeholder="What do yo u need?">
+                                <input type="text" id="search" name="search" class="text-dark font-weight-bold" placeholder="What do yo u need?">
                                 <button type="button" onclick="advanceSearch()" class="site-btn">SEARCH</button>
                             </form>
                         </div>

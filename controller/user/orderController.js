@@ -6,6 +6,7 @@ const userModel = require("../../models/userModel");
 const couponModel = require('../../models/couponModel');
 const walletModel = require('../../models/walletModel');
 const cartModel = require('../../models/cartModel');
+const wishlistModel = require("../../models/wishlistModel");
 
 const loadorder = async (req, res)=>{
     const userId = req.session.user_id;
@@ -32,8 +33,9 @@ const loadorder = async (req, res)=>{
                             });
 
     const cart = await cartModel.findOne({userId: userId});
+    const wishlist = await wishlistModel.findOne({userId});
 
-    res.render('user/order',{id: userId, products, orders, user: userData, cart});
+    res.render('user/order',{id: userId, products, orders, user: userData, cart, wishlist});
 }
 
 const loadOrderDetails = async (req, res)=>{
@@ -55,6 +57,7 @@ const loadOrderDetails = async (req, res)=>{
                                 }) 
         
         const coupon  = await couponModel.findOne({_id: order.coupon});
+        console.log(order);
         const cartAddress = await orderModel.findOne({_id: orderId}).populate("address");
         const cart = await cartModel.findOne({userId: userId});
 

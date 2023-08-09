@@ -208,7 +208,7 @@
                             <div class="mb-2">
                                 <% if(product.quantity !== 0){ %>
                                 <button  style="box-shadow: none;background-color: #7fad39;" class=" btn primary-btn text-light" <% if(userId) {%> onclick="addToClick('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  >ADD TO CART</button>
-                                <button id="wishlist-icon"  style="border: none;" class="heart-icon rounded" <% if(userId) {%> onclick="addToWishlist('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  ><span class="icon_heart h5 <% if(userId &&wishlist.items.includes(product._id) ){ %>text-danger <% } %>"></span></button>
+                                <button id="wishlist-icon"  style="border: none;" class="heart-icon rounded" <% if(userId) {%> onclick="addToWishlist('<%=product._id%>')" <% }else{ %> onclick="notLogin()" <% } %>  ><span class="icon_heart h5 <% if(userId && wishlist && wishlist.items.includes(product._id) ){ %>text-danger <% } %>"></span></button>
                                 <% }else{ %>
                                     <kbd class="bg-danger text-dark"><b>No Stock Available</b></kbd>
                                     <div class="mt-2"><b>Please try after some time!</b></div>

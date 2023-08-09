@@ -2,11 +2,13 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const cartModel = require('../../models/cartModel');
 const productModel = require('../../models/productModel');
 const userModel = require('../../models/userModel');
+const wishlistModel = require('../../models/wishlistModel');
 
 const loadCart = async (req, res)=>{
     const id = req.session.user_id;
     const user = await userModel.findOne({_id: id});
-    let cart = await cartModel.findOne({userId: req.session.user_id})
+    const wishlist = await wishlistModel.findOne({userId: id});
+    let cart = await cartModel.findOne({userId: req.session.user_id});
     let productList = [];
     let products;
     if(cart){
@@ -38,7 +40,7 @@ const loadCart = async (req, res)=>{
     }
 
     
-    res.render("user/cart",{id, user, products, productList});
+    res.render("user/cart",{id, user, products, productList, wishlist});
 }
 
 

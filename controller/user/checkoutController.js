@@ -243,11 +243,12 @@ const checkout = async (req, res)=>{
             newOrder.price = cart.cartPrice - coupon.discount;
             newOrder.payment_status = true;
             newOrder.razorpay_order_id = payment_id;
-
+            newOrder.coupon = coupon._id;
 
         }else{
 
             newOrder.price = cart.cartPrice - coupon.discount;
+            newOrder.coupon = coupon._id;
 
         }
 

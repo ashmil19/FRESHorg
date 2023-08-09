@@ -74,7 +74,7 @@
                             
 
                             <ul>
-                                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                                <li id="wishlist"><a href="/wishlist"><i class="fa fa-heart"></i> <span><% if(wishlist){ %><%= wishlist.items.length %><% }else{ %>0<% } %></span></a></li>
                                 <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>
                             </ul>
 
@@ -154,11 +154,11 @@
                 <% if(wallet !== null){ %>
                         <div class="row my-4">
                             <div class="col-12">
-                            <div class="card rounded">
+                            <div class="card rounded" style="background-color: rgb(245, 222, 222) !important;">
                                 
                                 <div class="card-body d-flex justify-content-between py-0 pr-0">
                                 <span class="text-dark py-3">Available Balance</span>
-                                <div class="col-lg-2 col-4 bg-white py-3 border-left text-center" style="background-color: rgb(186, 243, 182) !important;">
+                                <div class="col-lg-2 col-4 bg-white py-3 border-left text-center" style="border-color: rgb(231, 171, 171) !important;">
                                 <span class="text-dark font-weight-bold">&#x20B9;<%=wallet.balance%></span>
                                 </div>
                                 </div>
@@ -189,12 +189,12 @@
                 <% } else {%>
                     <div class="row mt-4">
                         <div class="col-12">
-                          <div class="card rounded border-primary" style="background-color: rgb(245, 222, 222) !important;">
+                          <div class="card rounded border" style="background-color: rgb(245, 222, 222) !important;">
                             
                             <div class="card-body d-flex justify-content-between py-0 pr-0">
                               <span class="text-dark py-3">Available Balance</span>
                               <div class="col-lg-2 col-4 bg-white py-3 border-left text-center" style="border-color: rgb(231, 171, 171) !important;">
-                              <span class="text-dark">&#x20B9;0</span>
+                              <span class="text-dark font-weight-bold">&#x20B9;0</span>
                             </div>
                             </div>
                           </div>

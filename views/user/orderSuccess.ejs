@@ -63,7 +63,7 @@
                                         </td>
                                         <td width="20%">
                                             <div class="text-right">
-                                                <span class="font-weight-bold">$<%= (item.productPrice * item.quantity).toFixed(2) %></span>
+                                                <span class="font-weight-bold">&#8377;<%= (item.productPrice * item.quantity).toFixed(2) %></span>
                                             </div>
                                         </td>
                                     </tr>
@@ -84,8 +84,8 @@
                                             </td>
                                             <td>
                                                 <div class="text-right">
-                                                    <span class="font-weight-bold">$ <% if(coupon != null){ %> <%= coupon.discount %> <%} else {%> 0 <% } %></span>
-                                                    <span class="font-weight-bold">$<%= order.price.toFixed(2) %></span>
+                                                    <span class="font-weight-bold">&#8377;<% if(coupon != null){ %> <%= coupon.discount %> <%} else {%> 0 <% } %></span>
+                                                    <span class="font-weight-bold">&#8377;<%= order.price.toFixed(2) %></span>
                                                 </div>
                                             </td>
                                         </tr>

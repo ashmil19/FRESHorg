@@ -2,6 +2,7 @@ const categoryModel = require("../../models/categoryModel");
 const productModel = require("../../models/productModel");
 const userModel = require("../../models/userModel");
 const cartModel = require("../../models/cartModel");
+const wishlistModel = require("../../models/wishlistModel");
 
 
 const loadCategory = async (req, res)=>{
@@ -23,6 +24,7 @@ const loadCategory = async (req, res)=>{
     }
         
     const user = await userModel.findOne({_id: id});
+    const wishlist = await wishlistModel.findOne({userId: id});
 
     const products = await productModel.find({
         category: catId,
@@ -37,7 +39,7 @@ const loadCategory = async (req, res)=>{
     const categories = await categoryModel.find();
     const cart = await cartModel.findOne({userId: id});
 
-    res.render('user/shop',{categories, products, user, id, cart, search, minamount, maxamount});
+    res.render('user/shop',{categories, products, user, id, cart, search, minamount, maxamount, wishlist});
 }
 
 module.exports = {

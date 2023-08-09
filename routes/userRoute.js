@@ -69,7 +69,7 @@ router.post('/order/return',orderController.orderReturn);
 
 router.get('/wallet',userAuth.isLogin,walletController.loadWallet);
 
-router.get('/wishlist',wishlistController.loadWishlist);
+router.get('/wishlist',userAuth.isLogin,wishlistController.loadWishlist);
 router.get('/addToWishlist',wishlistController.addToWishlist);
 
 router.get('/logout',homeController.userLogout);
