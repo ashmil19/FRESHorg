@@ -18,7 +18,7 @@ router.post('/sale/monthly',dashboardController.monthlySaleReport);
 router.post('/sale/daily',dashboardController.dailySalesReport);
 router.post('/sale/date',dashboardController.byDateSaleReport);
 
-router.get('/category',adminAuth.isLogin,categoryController.loadCategory)
+router.get('/category',adminAuth.isLogin,categoryController.loadCategory);
 router.get('/category/add',adminAuth.isLogin,categoryController.loadAddCategory);
 router.post('/category/add',categoryController.addCategory);
 router.get('/category/edit',adminAuth.isLogin,categoryController.loadEditCategory);
@@ -30,7 +30,7 @@ router.post('/product/add',productController.addProducts);
 router.get('/product/edit',adminAuth.isLogin,productController.loadEditProduct);
 router.post('/product/edit',productController.editProduct);
 router.get('/product/image',adminAuth.isLogin,productController.loadImages);
-router.delete('/product/image/delete',productController.deleteProductImage)
+router.delete('/product/image/delete',productController.deleteProductImage);
 router.get('/product/image/add',adminAuth.isLogin,productController.loadAddImage);
 router.post('/product/image/add',productController.editImage);
 router.get('/product/delete',productController.deleteProduct);

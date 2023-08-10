@@ -7,7 +7,7 @@
         
         <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
             <div class="table">
-                <table class="table table-light table-striped table-responsive" >
+                <table id="dtBasicExample" class="table table-light table-striped table-responsive" >
                 <thead>
                     
                     <tr>
@@ -19,7 +19,7 @@
                     
                 </thead>
                 
-                <tbody>
+                <tbody id="tableVa">
                     
                     <% categories.forEach((category,i)=>{ %>
                         <tr>
@@ -42,5 +42,21 @@
         </div>
             
         </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+
+
+<script>
+    var table = $('#dtBasicExample').DataTable({
+        dom: 'Bfrtip',
+        pageLength: 6,
+    });
+    
+    $('.dataTables_length').addClass('bs-select');
+</script>
         
         <%- include('./partials/footer.ejs') %>

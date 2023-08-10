@@ -1,13 +1,113 @@
 <%- include('./partials/header.ejs') %>
 
+<style>
+    .dataTables_wrapper{
+        padding: 3rem;
+    }
+    .dataTables_wrapper .dt-buttons button{
+        background-color: #7FAD39;
+        border-radius: 5px;
+        border: none;
+        padding: .50rem .80rem;
+        font-weight: 500;
+    }
+
+    .dataTables_wrapper .dataTables_filter {   
+        margin: 1rem 0;
+    }
+
+    .dataTables_wrapper .dataTables_filter input{
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate{
+        display: flex;
+        justify-content: center;
+    }
+
+    .dataTables_wrapper .dt-buttons{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    label {
+    font-size: 18px;
+    }
+
+    .dateP input {
+        padding: 10px 15px !important;
+        border: 1px solid #CFD8DC !important;
+        border-radius: 4px !important;
+        box-sizing: border-box;
+        background-color: #fff !important;
+        color: #000 !important;
+        font-size: 16px !important;
+        letter-spacing: 1px;
+        position: relative;
+        width: 100%;
+    }
+
+    .dateP input:focus {
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        border: 1px solid #FFA000 !important;
+        outline-width: 0;
+    }
+
+    .daterangepicker {
+    background-color: #fff;
+    border-radius: 0 !important;
+    align-content: center !important;
+    padding: 0 !important;
+    }
+
+    /*Weekday Heading*/
+    thead tr:nth-child(2) {
+    color: #BDBDBD !important;
+    }
+
+    tbody tr td {
+    padding: 5px 7px !important;
+    }
+
+    .month {
+    font-size: 16px !important;
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+    }
+
+    .start-date, .end-date {
+    border-radius: 0px !important;
+    }
+
+    .available:hover {
+    border-radius: 0px !important;
+    }
+
+    .off {
+    color: #EEEEEE !important;
+    }
+
+    .off:hover {
+    background-color: #EEEEEE !important;
+    color: #fff !important;
+    }
+
+    .drp-buttons {
+    display: none !important;
+    }
+</style>
+
     <div class="container-fluid d-flex gap-4" style="background-color: #EDF1F5;">
         
         <%- include('./partials/sidebar.ejs') %>
 
         <div style="overflow-y: auto;" class="w-100 d-flex align-items-center align-items-center">
 
-            <div class="table" >
-                <table class="table table-light table-striped table-responsive" >
+            <div class="table mt-4" >
+                <table id="dtBasicExample" class="table table-light table-striped table-responsive" >
                 <thead>
                     
                     <tr>
@@ -22,7 +122,7 @@
                     
                 </thead>
                 
-                <tbody>
+                <tbody id="tableVa">
                         <% for(let i=0;i<orders.length;i++){ %>
                         <tr>
                             <td><%= i+1 %></td>
@@ -49,5 +149,21 @@
 
        
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+
+
+<script>
+    var table = $('#dtBasicExample').DataTable({
+        dom: 'Bfrtip',
+        pageLength: 6,
+    });
+    
+    $('.dataTables_length').addClass('bs-select');
+</script>
 
     <%- include('./partials/footer.ejs') %>
