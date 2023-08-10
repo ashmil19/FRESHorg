@@ -1,7 +1,7 @@
 const cartModel = require("../../models/cartModel");
 const userModel = require("../../models/userModel");
 const walletModel = require("../../models/walletModel");
-const wishlistModel = require("../../models/walletModel");
+const wishlistModel = require("../../models/wishlistModel");
 
 
 const loadWallet = async (req, res)=>{

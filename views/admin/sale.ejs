@@ -24,10 +24,90 @@
         display: flex;
         justify-content: center;
     }
+
+    .dataTables_wrapper .dt-buttons{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+/* .container {
+  padding-top: 120px;
+  padding-bottom: 120px;
+} */
+
+label {
+  font-size: 18px;
+}
+
+.dateP input {
+    padding: 10px 15px !important;
+    border: 1px solid #CFD8DC !important;
+    border-radius: 4px !important;
+    box-sizing: border-box;
+    background-color: #fff !important;
+    color: #000 !important;
+    font-size: 16px !important;
+    letter-spacing: 1px;
+    position: relative;
+    width: 100%;
+}
+
+.dateP input:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid #FFA000 !important;
+    outline-width: 0;
+}
+
+.daterangepicker {
+  background-color: #fff;
+  border-radius: 0 !important;
+  align-content: center !important;
+  padding: 0 !important;
+}
+
+/*Weekday Heading*/
+thead tr:nth-child(2) {
+  color: #BDBDBD !important;
+}
+
+tbody tr td {
+  padding: 5px 7px !important;
+}
+
+.month {
+  font-size: 16px !important;
+  padding-bottom: 10px !important;
+  padding-top: 10px !important;
+}
+
+.start-date, .end-date {
+  border-radius: 0px !important;
+}
+
+.available:hover {
+  border-radius: 0px !important;
+}
+
+.off {
+  color: #EEEEEE !important;
+}
+
+.off:hover {
+  background-color: #EEEEEE !important;
+  color: #fff !important;
+}
+
+.drp-buttons {
+  display: none !important;
+}
 </style>
 
 <div class="row container-fluid mt-4">
-    <div class="col-4 half-gutter grid-margin mb-4">
+
+    <div class="col-md-4 col-sm-12 half-gutter grid-margin mb-4">
         <div class="card card-white">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -39,7 +119,8 @@
             </div>
         </div>
     </div>
-    <div class="col-4 half-gutter grid-margin mb-4">
+
+    <div class="col-md-4 col-sm-12 half-gutter grid-margin mb-4">
         <div class="card card-white">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -56,7 +137,7 @@
             </div>
         </div>
     </div>
-    <div class="col-4 half-gutter grid-margin mb-4">
+    <div class="col-md-4 col-sm-12 half-gutter grid-margin mb-4">
         <div class="card card-white">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -74,40 +155,59 @@
     </div>
 </div>
 
-<table id="dtBasicExample" class="table bg-white table-bordered" cellspacing="0" width="100%">
-    <thead class="bg-light">
-        <tr>
-            <!-- <th>Order ID</th> -->
-            <th>Date</th>
-            <th>Total Order</th>
-            <th>Total Product</th>
-            <th>Total</th>
-            <th>Profit</th>
-        </tr>
-    </thead>
-    <tbody id="tableVa">
-        <% for (let report of yearly) { %>
+<div class="container px-1 px-sm-5 mx-auto dateP">
+    <form autocomplete="off">
+      <div class="flex-row d-flex justify-content-center">
+        <div class="col-xl-5 col-lg-6 col-11 px-1">
+          <div class="input-group input-daterange">
+            <label class="">Select Date Range :</label>
+            <input type="text" id="dateRange" name="daterange" value="01/01/2018 - 01/15/2018" readonly />
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-sm btn-dark" onclick="saleByDate()" >apply</button>
+    </div>
+  </div>
+
+<div style="overflow-y: auto;" class="">
+
+
+    <table id="dtBasicExample" class="table bg-white table-bordered table-responsive" cellspacing="0" width="100%">
+        <thead class="bg-light">
             <tr>
-                <td><a href="#">
-                        <%=report._id.year%>
-                    </a></td>
-                <td>
-                    <%=report.count%>
-                </td>
-                <td>
-                    <%=report.items%>
-                </td>
-                <td>&#x20B9;<%=report.total%>.00</td>
-                <td>&#x20B9;<%=(report.total*30) /100%>
-                </td>
-                <!-- <td>$400</td> -->
-                <%}%>
+                <!-- <th>Order ID</th> -->
+                <th>Date</th>
+                <th>Total Order</th>
+                <th>Total Product</th>
+                <th>Total</th>
+                <th>Profit</th>
             </tr>
-    </tbody>
-    
-</table>
+        </thead>
+        <tbody id="tableVa">
+            <% for (let report of yearly) { %>
+                <tr>
+                    <td><a href="#">
+                            <%=report._id.year%>
+                        </a></td>
+                    <td>
+                        <%=report.count%>
+                    </td>
+                    <td>
+                        <%=report.items%>
+                    </td>
+                    <td>&#x20B9;<%=report.total%>.00</td>
+                    <td>&#x20B9;<%=(report.total*30) /100%>
+                    </td>
+                    <!-- <td>$400</td> -->
+                    <%}%>
+                </tr>
+        </tbody>
+        
+    </table>
 
-
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -124,15 +224,39 @@
     src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.html5.min.js"></script>
 <script type="text/javascript" language="javascript"
     src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.print.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="moment.js"></script>
+
 
 <script>
+
+    $(document).ready(function(){
+        $(function() {
+
+            const endDate = moment().format('DD/MM/YYYY');
+            const startDate = moment().subtract(7, 'days').format('DD/MM/YYYY');
+
+            $('input[name="daterange"]').daterangepicker({
+            "startDate": startDate,
+            "endDate": endDate,
+            opens: 'center',
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+            });
+        });
+    });
+
     var table = $('#dtBasicExample').DataTable({
         dom: 'Bfrtip',
         buttons: [
         'copy', 'csv', 'excel', 'pdf', 'print'
     ]
     });
+    
     $('.dataTables_length').addClass('bs-select');
     function month() {
         axios({
@@ -201,6 +325,48 @@
             });
     }
 
+    function saleByDate(){
+        const dateRange = $("#dateRange").val();
+        axios({
+            method: "post",
+            url: "/admin/sale/date",
+            data: {
+                dateRange
+            }
+        })
+        .then((result) => {
+                if (result.data.error) {
+                    console.log("oops");
+                } else {
+                    let html = "";
+                    let saleReport = result.data.byDateSales;
+                    saleReport.forEach((element) => {
+                        html += `<tr>
+                            <td><a href="#">${element._id.Day}/${element._id.Month}/${element._id.Year}</a></td>
+                            <td>${element.count}</td>
+                            <td>${element.items}</td>
+                            <td>&#x20B9;${element.total}.00</td>
+                            <td>&#x20B9;${(element.total * 15) / 100}</td>
+                        </tr>`;
+                    });
+                    table.clear().rows.add($(html)).draw();
+                //     $(document).ready(function () {
+                //     $('#dtBasicExample').DataTable({
+                //         "searching": false // false to disable search (or any other option)
+                //     });
+                //     $('.dataTables_length').addClass('bs-select');
+                // })
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            }); 
+    }
+
+</script>
+
+<script>
+    
 </script>
 
 

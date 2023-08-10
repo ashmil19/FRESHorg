@@ -84,18 +84,38 @@ const cancelOrder = async (req, res)=>{
         
 
         if(order.payment_method == "online" || order.payment_method == "wallet"){
-            const wallet = await walletModel.findOne({user: order.user});
-            let balance = wallet.balance;
-            const newBalance = balance + order.price;
-            const history = {
-                type: "add",
-                amount: order.price,
-                newBalance: newBalance,
+            let wallet = await walletModel.findOne({user: order.user});
+
+            if(!wallet){
+                wallet = new walletModel({
+                    user: order.user,
+                    balance: order.price,
+                    history: [{
+                        type: "add",
+                        amount: order.price,
+                        newBalance: order.price
+                    }]
+                })
+    
+                await wallet.save();
+    
+            }else{
+
+                let balance = wallet.balance;
+                const newBalance = balance + order.price;
+                const history = {
+                    type: "add",
+                    amount: order.price,
+                    newBalance: newBalance,
+                }
+
+                wallet.balance = newBalance;
+                wallet.history.push(history);
+                wallet.save();
+
             }
 
-            wallet.balance = newBalance;
-            wallet.history.push(history);
-            wallet.save();
+            
         }
 
         await orderModel.findByIdAndUpdate(orderId,{order_status: "cancelled"})

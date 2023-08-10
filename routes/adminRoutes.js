@@ -16,6 +16,7 @@ router.get('/dashboard',adminAuth.isLogin,dashboardController.loadDashboard);
 router.get('/sale',adminAuth.isLogin,dashboardController.loadSalesReport);
 router.post('/sale/monthly',dashboardController.monthlySaleReport);
 router.post('/sale/daily',dashboardController.dailySalesReport);
+router.post('/sale/date',dashboardController.byDateSaleReport);
 
 router.get('/category',adminAuth.isLogin,categoryController.loadCategory)
 router.get('/category/add',adminAuth.isLogin,categoryController.loadAddCategory);

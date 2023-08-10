@@ -258,6 +258,65 @@ const dailySalesReport = async (req, res)=>{
     }
 }
 
+const byDateSaleReport = async (req, res)=>{
+    try {
+
+        const { dateRange } = req.body;
+
+        const date = dateRange.split("-");
+        const startDate = date[0].trim();
+        const endDate = date[1].trim();
+
+        
+        const [startDay, startMonth, startYear] = startDate.split('/');
+        const [endDay, endMonth, endYear] = endDate.split('/');
+        
+        const formattedStartDate = `${startYear}-${startMonth.padStart(2, '0')}-${startDay.padStart(2, '0')}T00:00:00.000Z`;
+        const formattedEndDate = `${endYear}-${endMonth.padStart(2, '0')}-${endDay.padStart(2, '0')}T00:00:00.000Z`;
+        
+
+        const byDateSales = await orderModel.aggregate([
+            {
+                $match: {
+                    order_status: "delivered",
+                    order_date: {
+                        $gte: new Date(formattedStartDate), 
+                        $lte: new Date(formattedEndDate)
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "orderitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "orderdata"
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        Year: {$year: "$order_date"},
+                        Month: {$month: "$order_date"},
+                        Day: {$dayOfMonth: "$order_date"}
+                    },
+                    items: {$sum: {$sum: "$orderdata.quantity"}},
+                    count: {$sum: 1},
+                    total: {$sum: "$price"}
+                }
+            },
+            {
+                $sort: {"_id.Year": -1,"_id.Month": 1,"_id.Day": 1}
+            },
+        ])
+
+        res.json({byDateSales, error: false});
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 const adminLogout = (req, res)=>{
     try {
@@ -276,4 +335,5 @@ module.exports = {
     loadSalesReport,
     monthlySaleReport,
     dailySalesReport,
+    byDateSaleReport,
 }
