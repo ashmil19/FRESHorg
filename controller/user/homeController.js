@@ -6,11 +6,9 @@ const bannerModel = require('../../models/bannerModel');
 const wishlistModel = require('../../models/wishlistModel');
 
 const loadHome = async (req, res)=>{
-
     try{
 
         const id = req.session.user_id;
-
         let search = '';
         if(req.query.search){
             search = req.query.search;
@@ -28,7 +26,6 @@ const loadHome = async (req, res)=>{
         const categories = await categoryModel.find();
         res.render('user/home',{categories, cart, products, user, id, banners, wishlist});
 
-
     }catch(err){
         console.log(err);
     }
@@ -45,8 +42,6 @@ const userLogout = (req, res)=>{
         console.log(error);
     }
 }
-
-
 
 
 

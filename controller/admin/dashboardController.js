@@ -4,7 +4,6 @@ const userModel = require('../../models/userModel');
 
 const loadDashboard = async(req, res)=>{
     try {
-
         let filterValue = 30;
         if(req.query.filter1){
             filterValue = parseInt(req.query.filter1);
@@ -60,9 +59,6 @@ const loadDashboard = async(req, res)=>{
         
 
         const category = await orderModel.aggregate([
-            // {
-            //     $unwind: "$items"
-            // },
             {
                 $lookup: {
                     from: "orderitems",
@@ -105,18 +101,13 @@ const loadDashboard = async(req, res)=>{
             cat.push(val);
         }
 
-        console.log(cat);
-
         const orders = await orderModel.find()
                             .populate("user")
                             .sort({order_date: -1})
                             .limit(5);
 
-
-
         const orderCount = await orderModel.countDocuments();
         const userCount = await userModel.countDocuments();
-
         res.render('admin/dashboard',{daily, category: cat, orderCount, userCount, user, orders});
     } catch (error) {
         console.log(error);
@@ -126,7 +117,6 @@ const loadDashboard = async(req, res)=>{
 //yearly
 const loadSalesReport = async (req, res)=>{
     try {
-
         const yearly = await orderModel.aggregate([
             {
                 $match: { order_status: {$eq: "delivered"}}
@@ -153,7 +143,6 @@ const loadSalesReport = async (req, res)=>{
         ]);
 
         res.render('admin/sale',{yearly});
-        
     } catch (error) {
         console.log(error);
     }
@@ -162,7 +151,6 @@ const loadSalesReport = async (req, res)=>{
 //monthly
 const monthlySaleReport = async (req, res)=>{
     try {
-
         const sales = await orderModel.aggregate([
             {
                 $match: { order_status: {$eq: "delivered"}}
@@ -210,9 +198,7 @@ const monthlySaleReport = async (req, res)=>{
             return oneSale;
         })
         
-        console.log(monthlySales);
         res.json({ monthlySales, error: false })
-
     } catch (error) {
         console.log(error);
     }
@@ -220,7 +206,6 @@ const monthlySaleReport = async (req, res)=>{
 
 const dailySalesReport = async (req, res)=>{
     try {
-
         const dailySales = await orderModel.aggregate([
             {
                 $match: { order_status: {$eq: "delivered"}}
@@ -252,7 +237,6 @@ const dailySalesReport = async (req, res)=>{
         ]);
 
         res.json({dailySales, error: false})
-        
     } catch (error) {
         console.log(error);
     }
@@ -260,21 +244,17 @@ const dailySalesReport = async (req, res)=>{
 
 const byDateSaleReport = async (req, res)=>{
     try {
-
         const { dateRange } = req.body;
-
         const date = dateRange.split("-");
         const startDate = date[0].trim();
         const endDate = date[1].trim();
 
-        
         const [startDay, startMonth, startYear] = startDate.split('/');
         const [endDay, endMonth, endYear] = endDate.split('/');
-        
+
         const formattedStartDate = `${startYear}-${startMonth.padStart(2, '0')}-${startDay.padStart(2, '0')}T00:00:00.000Z`;
         const formattedEndDate = `${endYear}-${endMonth.padStart(2, '0')}-${endDay.padStart(2, '0')}T00:00:00.000Z`;
         
-
         const byDateSales = await orderModel.aggregate([
             {
                 $match: {
@@ -311,7 +291,6 @@ const byDateSaleReport = async (req, res)=>{
         ])
 
         res.json({byDateSales, error: false});
-        
     } catch (error) {
         console.log(error);
     }
@@ -320,7 +299,6 @@ const byDateSaleReport = async (req, res)=>{
 
 const adminLogout = (req, res)=>{
     try {
-
         req.session.admin_id = null
         res.redirect('/login');
         

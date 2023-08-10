@@ -6,29 +6,20 @@ const wishlistModel = require("../../models/wishlistModel");
 
 const loadWishlist = async (req, res)=>{
     try {
-
         const id = req.session.user_id;
         const user = await userModel.findOne({_id: id});
         const wishlist = await wishlistModel.findOne({userId: id}).populate("items");
         const cart = await cartModel.findOne({userId: id});
-
-        console.log(wishlist);
-
-
         res.render('user/wishlist',{id, user, wishlist, cart});
-        
     } catch (error) {
         console.log(error);
     }
 }
 
 const addToWishlist = async (req, res)=>{
-
     try {
-
         const userId = req.session.user_id;
         const { productId } = req.query;
-
         const product = await productModel.findOne({_id: productId});
         const wishlist = await wishlistModel.findOne({userId: userId});
 
@@ -63,7 +54,6 @@ const addToWishlist = async (req, res)=>{
 
         }
 
-        
     } catch (error) {
         console.log(error);
     }

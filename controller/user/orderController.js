@@ -9,33 +9,29 @@ const cartModel = require('../../models/cartModel');
 const wishlistModel = require("../../models/wishlistModel");
 
 const loadorder = async (req, res)=>{
-    const userId = req.session.user_id;
-    const userData = await userModel.findOne({_id: userId});
-    const orders = await orderModel.find({user: userId}).sort({order_date: -1});
+    try {
+        const userId = req.session.user_id;
+        const userData = await userModel.findOne({_id: userId});
+        const orders = await orderModel.find({user: userId}).sort({order_date: -1});
+    
+        const products = await orderModel.find({user: userId})
+                                .populate({
+                                    path: 'items',
+                                    model: 'orderItem',
+                                    populate: {
+                                        path: 'product',
+                                        model: 'product'
+                                    }
+                                });
+    
+        const cart = await cartModel.findOne({userId: userId});
+        const wishlist = await wishlistModel.findOne({userId});
+    
+        res.render('user/order',{id: userId, products, orders, user: userData, cart, wishlist});
 
-    // let products = [];
-    // if(orders){
-
-    //     for(const order of orders){
-    //         const product = await orderItemModel.findOne({user}).populate("product")
-    //         products.push(product)
-    //     }
-    // }
-
-    const products = await orderModel.find({user: userId})
-                            .populate({
-                                path: 'items',
-                                model: 'orderItem',
-                                populate: {
-                                    path: 'product',
-                                    model: 'product'
-                                }
-                            });
-
-    const cart = await cartModel.findOne({userId: userId});
-    const wishlist = await wishlistModel.findOne({userId});
-
-    res.render('user/order',{id: userId, products, orders, user: userData, cart, wishlist});
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const loadOrderDetails = async (req, res)=>{
@@ -43,9 +39,7 @@ const loadOrderDetails = async (req, res)=>{
 
         const userId = req.session.user_id; 
         const { orderId } = req.query;
-
         const user = await userModel.findOne({_id: userId});
-
         const order = await orderModel.findOne({_id: orderId})
                                 .populate({
                                     path: 'items',
@@ -57,7 +51,6 @@ const loadOrderDetails = async (req, res)=>{
                                 }) 
         
         const coupon  = await couponModel.findOne({_id: order.coupon});
-        console.log(order);
         const cartAddress = await orderModel.findOne({_id: orderId}).populate("address");
         const cart = await cartModel.findOne({userId: userId});
 
@@ -72,16 +65,9 @@ const cancelOrder = async (req, res)=>{
 
     try {
 
-        const {
-            orderId
-        } = req.body;
-
+        const { orderId } = req.body;
         const order = await orderModel.findOne({_id: orderId})
                                     .populate('items');
-    
-    
-
-        
 
         if(order.payment_method == "online" || order.payment_method == "wallet"){
             let wallet = await walletModel.findOne({user: order.user});
@@ -120,7 +106,6 @@ const cancelOrder = async (req, res)=>{
 
         await orderModel.findByIdAndUpdate(orderId,{order_status: "cancelled"})
 
-        
         for(const item of order.items){
             
             await productModel.updateOne({_id: item.product },
@@ -137,40 +122,37 @@ const cancelOrder = async (req, res)=>{
         console.log(error);
         
     }
-    
-
 }
 
 const loadOrderSuccessPage = async (req, res)=>{
     
-    const { orderId } = req.query;
-
-    const order = await orderModel.findOne({_id: orderId});
-    const user = await userModel.findOne({_id: order.user});
-    const address = await addressModel.findOne({_id: order.address});
+    try {
+        const { orderId } = req.query;
+        const order = await orderModel.findOne({_id: orderId});
+        const user = await userModel.findOne({_id: order.user});
+        const address = await addressModel.findOne({_id: order.address});
+        const product = await orderModel.findOne({_id: orderId})
+                                    .populate({
+                                        path: 'items',
+                                        model: 'orderItem',
+                                        populate: {
+                                            path: 'product',
+                                            model: 'product'
+                                        }
+                                    }) 
+        const coupon = await couponModel.findOne({_id: order.coupon})
     
-    const product = await orderModel.findOne({_id: orderId})
-                                .populate({
-                                    path: 'items',
-                                    model: 'orderItem',
-                                    populate: {
-                                        path: 'product',
-                                        model: 'product'
-                                    }
-                                }) 
-    const coupon = await couponModel.findOne({_id: order.coupon})
-    console.log(coupon);
+        res.render('user/orderSuccess',{user, order, address, product, coupon});
 
-    res.render('user/orderSuccess',{user, order, address, product, coupon});
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const orderReturn = async (req, res)=>{
     try {
 
-        const {
-            orderId
-        } = req.body;
-
+        const { orderId } = req.body;
         const order = await orderModel.findById(orderId).populate("items");
         let wallet = await walletModel.findOne({user: order.user});
         
@@ -216,13 +198,11 @@ const orderReturn = async (req, res)=>{
     
         }
 
-
         if(wallet){
             res.send({success: true});
         }else{
             res.send({success: false});
         }
-        
         
     } catch (error) {
         console.log(error);

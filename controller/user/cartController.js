@@ -5,42 +5,46 @@ const userModel = require('../../models/userModel');
 const wishlistModel = require('../../models/wishlistModel');
 
 const loadCart = async (req, res)=>{
-    const id = req.session.user_id;
-    const user = await userModel.findOne({_id: id});
-    const wishlist = await wishlistModel.findOne({userId: id});
-    let cart = await cartModel.findOne({userId: req.session.user_id});
-    let productList = [];
-    let products;
-    if(cart){
-
-        for(const item of cart.items){
-            const product = await productModel.findOne({_id: item.productId});
-            
-            if(item.quantity > product.quantity){
-                await cartModel.updateOne(
-                    {
-                        userId: id,
-                        "items.productId": item.productId
-                    },
-                    {$set: {"items.$.quantity": product.quantity}}
-                )
-            }
-        }   
-
-
-
-        products = await cartModel
-                            .findOne({userId: req.session.user_id})
-                            .populate("items.productId");
-        
-        products.items.forEach((item)=>{
-            productList.push(item.productId)
-        })
-        
-    }
-
+    try {
+        const id = req.session.user_id;
+        const user = await userModel.findOne({_id: id});
+        const wishlist = await wishlistModel.findOne({userId: id});
+        let cart = await cartModel.findOne({userId: req.session.user_id});
+        let productList = [];
+        let products;
+        if(cart){
     
-    res.render("user/cart",{id, user, products, productList, wishlist});
+            for(const item of cart.items){
+                const product = await productModel.findOne({_id: item.productId});
+                
+                if(item.quantity > product.quantity){
+                    await cartModel.updateOne(
+                        {
+                            userId: id,
+                            "items.productId": item.productId
+                        },
+                        {$set: {"items.$.quantity": product.quantity}}
+                    )
+                }
+            }   
+    
+    
+    
+            products = await cartModel
+                                .findOne({userId: req.session.user_id})
+                                .populate("items.productId");
+            
+            products.items.forEach((item)=>{
+                productList.push(item.productId)
+            })
+            
+        }
+    
+        
+        res.render("user/cart",{id, user, products, productList, wishlist});
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
@@ -51,16 +55,9 @@ const addToCart = async (req, res)=>{
 
         const { productId } = req.query;
         const userId = req.session.user_id;
-        
-        
-        
         const cart = await cartModel.findOne({userId: userId});
         const product = await productModel.findOne({_id: productId});
 
-
-      
-        
-       
         if(cart){
 
             let productExist = await cartModel.findOne({userId: userId, "items.productId": productId});
@@ -142,12 +139,8 @@ const addToCart = async (req, res)=>{
 
 const quantityDecrement = async (req, res)=>{
     try {
-
-
         const {userId , productId} = req.query;
-
         const product = await productModel.findOne({_id: productId});
-       
 
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
         {
@@ -158,22 +151,17 @@ const quantityDecrement = async (req, res)=>{
             }
         })
 
-
         res.send({response: true})
         
     } catch (error) {
-
         console.log(error);
-        
     }
     
 }
 
 const quantityIncrement = async (req, res)=>{
     try {
-
         const {userId , productId} = req.query;
-
         const product = await productModel.findOne({_id: productId});
 
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
@@ -188,34 +176,27 @@ const quantityIncrement = async (req, res)=>{
         res.send({response: true})
         
     } catch (error) {
-
         console.log(error);
-        
     }
     
 }
 
 const removeItem = async (req, res)=>{
     try {
-
         const {
             productId,
             userId,
         } = req.body;
-    
-        // console.log(productId);
-        // console.log(req.body);
-        
 
         await cartModel.findOneAndUpdate({userId: userId, "items.productId": productId},
             {
                 $pull: {
                     "items": {productId: productId}
                 }
-            })
+            }
+        )
 
         const cart = await cartModel.findOne({userId: userId})
-
         
         if(cart.items.length > 0){
 
@@ -246,8 +227,6 @@ const removeItem = async (req, res)=>{
 
         }
 
-        
-    
         res.send({response: true})
         
     } catch (error) {

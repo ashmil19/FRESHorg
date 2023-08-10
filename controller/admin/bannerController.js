@@ -12,24 +12,23 @@ const loadBanner = async (req, res)=>{
 }
 
 const loadAddBanner = async (req, res)=>{
-    const categories = await categoryModel.find();
-    res.render('admin/addBanner',{categories});
+    try {
+        const categories = await categoryModel.find();
+        res.render('admin/addBanner',{categories});
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const addBanner = async (req, res)=>{
     try {
-
         const {
             title,
             targetCategory,
             description,
-
         } = req.body;
-
         const { image } = req.files;
-
         const bannerImage = await cloudinaryUpload.imageUpload(image);
-
         const newBanner = new bannerModel({
             title,
             bannerImage,
@@ -39,7 +38,6 @@ const addBanner = async (req, res)=>{
 
         newBanner.save();
         res.redirect('/admin/banner');
-
     } catch (error) {
         console.log(error);
     }
@@ -47,13 +45,9 @@ const addBanner = async (req, res)=>{
 
 const loadEditBanner = async (req, res)=>{
     try {
-
         const { bannerId } = req.query;
-
         const banner = await bannerModel.findOne({_id: bannerId});
-
         res.render("admin/editBanner",{banner});
-        
     } catch (error) {
         console.log(error);
     }
@@ -61,21 +55,17 @@ const loadEditBanner = async (req, res)=>{
 
 const editBanner = async (req, res)=>{
     try {
-
         const {
             title,
             description
         } = req.body;
-
         const { bannerId } = req.query;
-
         await bannerModel.findByIdAndUpdate(bannerId,{
             title: title,
             description: description,
         })
 
         res.redirect('/admin/banner');
-        
     } catch (error) {
         console.log(error);
     }

@@ -7,35 +7,27 @@ const wishlistModel = require('../../models/wishlistModel');
 
 
 const loadShopDetails = async (req, res)=>{
-
     try {
-
         const userId = req.session.user_id;
-        
         const user = await userModel.findOne({_id: userId});
         const cart = await cartModel.findOne({userId});
         const wishlist = await wishlistModel.findOne({userId});
 
-        const id = req.query.id;
+        const productId = req.query.id;
 
         const products = await productModel.find();
         const categories = await categoryModel.find();
 
-        await productModel.findOne({_id: id})
+        await productModel.findOne({_id: productId})
         .then((product)=>{
             if(!product){
                 res.render('user/404page');
             }
-
             res.render('user/shopDetails',{categories, cart, product, products, userId, user, wishlist});
         })
         .catch(err =>{
             res.render('user/404page');
         })
-        
-        
-
-        
 
     } catch (error) {
         console.log(error);
