@@ -29,16 +29,20 @@ const loadAddress = async (req, res) => {
       wishlist,
     });
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
-const loadAddAddress = (req, res) => {
+const loadAddAddress = async (req, res) => {
   try {
+    const id = req.session.user_id;
+    const user = await userModel.findOne({ _id: id });
+    const wishlist = await wishlistModel.findOne({ user: id });
+    const cart = await cartModel.findOne({ user: id });
     const type = req.query.type;
-    res.render("user/addAddress", { type });
+    res.render("user/addAddress", { type, id, wishlist, cart, user });
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
@@ -66,17 +70,28 @@ const addAddress = async (req, res) => {
     await newAddress.save();
     res.redirect("/address");
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
 const loadEditAddress = async (req, res) => {
   try {
     const { type, id } = req.query;
+    const userId = req.session.user_id;
+    const user = await userModel.findOne({ _id: userId });
+    const wishlist = await wishlistModel.findOne({ user: userId });
+    const cart = await cartModel.findOne({ user: userId });
     const address = await addressModel.findOne({ _id: id });
-    res.render("user/editAddress", { type, address });
+    res.render("user/editAddress", {
+      type,
+      address,
+      id: userId,
+      wishlist,
+      cart,
+      user,
+    });
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
@@ -100,7 +115,7 @@ const editAddress = async (req, res) => {
 
     res.redirect("/address");
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
@@ -110,7 +125,7 @@ const deleteAddress = async (req, res) => {
     await addressModel.deleteOne({ _id: id });
     res.json({ response: true });
   } catch (error) {
-    res.render('user/404page');
+    res.render("user/404page");
   }
 };
 
