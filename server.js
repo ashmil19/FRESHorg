@@ -47,6 +47,10 @@ app.use(nocache());
 app.use('/admin',adminRoutes);
 app.use('/',userRoutes);
 
+app.use((req, res)=>{
+    res.status(404).render('user/404page');
+})
+
 // start the app
 app.listen(process.env.PORT,()=>{
     console.log(`http://localhost:${process.env.PORT}`)
