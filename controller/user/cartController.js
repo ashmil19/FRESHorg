@@ -13,19 +13,20 @@ const loadCart = async (req, res) => {
     let productList = [];
     let products;
     if (cart) {
-      for (const item of cart.items) {
-        const product = await productModel.findOne({ _id: item.productId });
+      // for (const item of cart.items) {
+      //   const product = await productModel.findOne({ _id: item.productId });
 
-        if (item.quantity > product.quantity) {
-          await cartModel.updateOne(
-            {
-              userId: id,
-              "items.productId": item.productId,
-            },
-            { $set: { "items.$.quantity": product.quantity } }
-          );
-        }
-      }
+      //   if (item.quantity > product.quantity) {
+
+      //     await cartModel.updateOne(
+      //       {
+      //         userId: id,
+      //         "items.productId": item.productId,
+      //       },
+      //       { $set: { "items.$.quantity": product.quantity } }
+      //     );
+      //   }
+      // }
 
       products = await cartModel
         .findOne({ userId: req.session.user_id })

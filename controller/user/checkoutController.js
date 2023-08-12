@@ -5,10 +5,29 @@ const orderModel = require("../../models/orderModel");
 const orderItemModel = require("../../models/orderItemModel");
 const productModel = require("../../models/productModel");
 const couponModel = require("../../models/couponModel");
-
-const Razorpay = require("razorpay");
 const walletModel = require("../../models/walletModel");
 const wishlistModel = require("../../models/wishlistModel");
+
+const Razorpay = require("razorpay");
+
+const checkQuantity = async (req, res) => {
+  try {
+    const id = req.session.user_id;
+    const cart = await cartModel.findOne({ userId: id });
+
+    for (const item of cart.items) {
+      const product = await productModel.findById(item.productId);
+      if (product.quantity < item.quantity) {
+        res.send({ response: "noitem" });
+        return;
+      }
+    }
+
+    res.send({ response: "success" });
+  } catch (error) {
+    res.render("user/404page");
+  }
+};
 
 const loadCheckoutAddress = async (req, res) => {
   try {
@@ -16,7 +35,8 @@ const loadCheckoutAddress = async (req, res) => {
     const userData = await userModel.findOne({ _id: id });
     const address = await addressModel.find({ _id: id });
     const wishlist = await wishlistModel.findOne({ user: id });
-    const cart = await cartModel.findOne({ user: id });
+    const cart = await cartModel.findOne({ userId: id });
+
     const contactAddress = await addressModel.findOne({
       user: id,
       type: "contact",
@@ -252,4 +272,5 @@ module.exports = {
   selectAddress,
   checkout,
   razorPayPaymet,
+  checkQuantity,
 };

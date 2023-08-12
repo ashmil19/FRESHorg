@@ -55,7 +55,8 @@ router.get('/decrementQuantity',cartController.quantityDecrement);
 router.get('/incrementQuantity',cartController.quantityIncrement);
 router.post('/removeItem',cartController.removeItem);
 
-router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress)
+router.get('/checkout/checkQuantity',checkoutController.checkQuantity);
+router.get('/checkout/address',userAuth.isLogin,checkoutController.loadCheckoutAddress);
 router.post('/checkout/addAddress',checkoutController.checkoutAddAddress);
 router.get('/checkout',userAuth.isLogin,checkoutController.selectAddress);
 router.post('/razorpay',checkoutController.razorPayPaymet);
