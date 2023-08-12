@@ -44,10 +44,10 @@
 
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Shop</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+                <!-- <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li> -->
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -71,15 +71,42 @@
                         <ul>
                             <li class="active"><a href="/">Home</a></li>
                             <li><a href="/shop">Shop</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <!-- <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li> -->
                         </ul>
                     </nav>
                 </div>
                 <div class="col-lg-3">
-                    <div class="header__cart">
+                    <div class="header__cart header__menu">
 
+                        <div class="header__top__right__auth">
 
+                            <% if(!id) {%>
+                            
+                            
+
+							<div class="header__top__right__auth">
+                                <a href="/login"><i class="fa fa-user"></i> Login</a>
+                            </div>
+
+                            <% } else {%>
+                            
+
+                            <ul>
+                                <li id="wishlist"><a href="/wishlist"><i class="fa fa-heart"></i> <span><% if(wishlist){ %><%= wishlist.items.length %><% }else{ %>0<% } %></span></a></li>
+                                <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span><% if(cart){ %><%= cart.items.length %><% }else{ %>0<% } %></span></a></li>
+                            </ul>
+
+                            <div class="header__top__right__auth">
+                                <a href="/profile"><i class="fa fa-user"></i><%= user.username %></a>
+                            </div>
+
+							<div class="header__top__right__auth">
+                                <a href="/logout" style="box-shadow: none;border: none;" class="btn btn-sm btn-outline-danger">Logout</a>
+                            </div>
+                            
+                            <% } %>
+                        </div>
 
                     </div>
                 </div>
