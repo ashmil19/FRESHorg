@@ -28,13 +28,15 @@ const loadShop = async (req, res) => {
     const banners = await bannerModel.find();
     const wishlist = await wishlistModel.findOne({ userId: id });
 
-    const totalProducts = await productModel.countDocuments({ isActive: true });
+    const query = {
+      isActive: true,
+      productName: { $regex: new RegExp(search, "i") },
+      $and: [{ price: { $gt: minamount } }, { price: { $lt: maxamount } }],
+    };
+
+    const totalProducts = await productModel.countDocuments(query);
     const products = await productModel
-      .find({
-        isActive: true,
-        productName: { $regex: new RegExp(search, "i") },
-        $and: [{ price: { $gt: minamount } }, { price: { $lt: maxamount } }],
-      })
+      .find(query)
       .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE);
 
